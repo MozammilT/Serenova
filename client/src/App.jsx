@@ -1,14 +1,12 @@
 import "./styles/App.css";
+import { useLocation } from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
+  const isOwnerPath = useLocation().pathname.includes("owner");
   return (
     <>
-      <div className="text-primary text-8xl tracking-tighter text-balance">
-        Hello React
-      </div>
-      <div className="text-secondary text-8xl tracking-tighter text-balance">
-        Hello Vite
-      </div>
+      {!isOwnerPath && <Navbar />}
     </>
   );
 }
