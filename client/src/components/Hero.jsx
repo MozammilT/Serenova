@@ -10,7 +10,7 @@ function Hero() {
       <h1 className="font-playfair text-5xl md:text-6xl md:leading-[56px] font-bold md:font-extrabold max-w-2xl mt-4">
         Discover Your Perfect Getaway Destination
       </h1>
-      <p className="mt-2 max-w-lg text-sm md:text-base">
+      <p className="mt-4 max-w-lg text-sm md:text-base">
         Unparalleled luxury and comfort await at the world's most exclusive
         hotels and resorts. Start your journey today.
       </p>
