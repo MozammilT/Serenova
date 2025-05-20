@@ -71,7 +71,11 @@ function Navbar() {
           alt="logo"
           className={`h-9 ${isScrolled && "invert opacity-80"}`}
         />
-        <p className="text-3xl text-white tracking-tight text-balance">
+        <p
+          className={`text-3xl text-white tracking-tight text-balance ${
+            isScrolled && "invert opacity-80"
+          }`}
+        >
           Serenova
         </p>
       </Link>

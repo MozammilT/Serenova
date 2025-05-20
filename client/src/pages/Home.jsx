@@ -1,11 +1,12 @@
 import React from "react";
 import Hero from "../components/Hero";
+import Featuredest from "../components/FeatureDest";
 
 function Homepage() {
   return (
     <>
-      <Hero /> 
-      {/* time-stamp: 48.05 */}
+      <Hero />
+      <Featuredest />
     </>
   );
 }

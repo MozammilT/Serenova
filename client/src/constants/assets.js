@@ -1,42 +1,42 @@
-// import logo from './logo.svg'
-// import searchIcon from './searchIcon.svg'
-// import userIcon from './userIcon.svg'
-// import calenderIcon from './calenderIcon.svg'
-// import locationIcon from './locationIcon.svg'
-// import starIconFilled from './starIconFilled.svg'
-// import arrowIcon from './arrowIcon.svg'
-// import starIconOutlined from './starIconOutlined.svg'
-// import instagramIcon from './instagramIcon.svg'
-// import facebookIcon from './facebookIcon.svg'
-// import twitterIcon from './twitterIcon.svg'
-// import linkendinIcon from './linkendinIcon.svg'
-// import freeWifiIcon from './freeWifiIcon.svg'
-// import freeBreakfastIcon from './freeBreakfastIcon.svg'
-// import roomServiceIcon from './roomServiceIcon.svg'
-// import mountainIcon from './mountainIcon.svg'
-// import poolIcon from './poolIcon.svg'
-// import homeIcon from './homeIcon.svg'
-// import closeIcon from './closeIcon.svg'
-// import locationFilledIcon from './locationFilledIcon.svg'
-// import heartIcon from './heartIcon.svg'
-// import badgeIcon from './badgeIcon.svg'
-// import menuIcon from './menuIcon.svg'
-// import closeMenu from './closeMenu.svg'
-// import guestsIcon from './guestsIcon.svg'
-// import roomImg1 from './roomImg1.png'
-// import roomImg2 from './roomImg2.png'
-// import roomImg3 from './roomImg3.png'
-// import roomImg4 from './roomImg4.png'
-// import regImage from './regImage.png'
-// import exclusiveOfferCardImg1 from "./exclusiveOfferCardImg1.png";
-// import exclusiveOfferCardImg2 from "./exclusiveOfferCardImg2.png";
-// import exclusiveOfferCardImg3 from "./exclusiveOfferCardImg3.png";
-// import addIcon from "./addIcon.svg";
-// import dashboardIcon from "./dashboardIcon.svg";
-// import listIcon from "./listIcon.svg";
-// import uploadArea from "./uploadArea.svg";
-// import totalBookingIcon from "./totalBookingIcon.svg";
-// import totalRevenueIcon from "./totalRevenueIcon.svg";
+import logo from "/logo.svg";
+import searchIcon from "/searchIcon.svg";
+import userIcon from "/userIcon.svg";
+import calenderIcon from "/calenderIcon.svg";
+import locationIcon from "/locationIcon.svg";
+import starIconFilled from "/starIconFilled.svg";
+import arrowIcon from "/arrowIcon.svg";
+import starIconOutlined from "/starIconOutlined.svg";
+import instagramIcon from "/instagramIcon.svg";
+import facebookIcon from "/facebookIcon.svg";
+import twitterIcon from "/twitterIcon.svg";
+import linkendinIcon from "/linkendinIcon.svg";
+import freeWifiIcon from "/freeWifiIcon.svg";
+import freeBreakfastIcon from "/freeBreakfastIcon.svg";
+import roomServiceIcon from "/roomServiceIcon.svg";
+import mountainIcon from "/mountainIcon.svg";
+import poolIcon from "/poolIcon.svg";
+import homeIcon from "/homeIcon.svg";
+import closeIcon from "/closeIcon.svg";
+import locationFilledIcon from "/locationFilledIcon.svg";
+import heartIcon from "/heartIcon.svg";
+import badgeIcon from "/badgeIcon.svg";
+import menuIcon from "/menuIcon.svg";
+import closeMenu from "/closeMenu.svg";
+import guestsIcon from "/guestsIcon.svg";
+import roomImg1 from "/roomImg1.png";
+import roomImg2 from "/roomImg2.png";
+import roomImg3 from "/roomImg3.png";
+import roomImg4 from "/roomImg4.png";
+import regImage from "/regImage.png";
+import exclusiveOfferCardImg1 from "/exclusiveOfferCardImg1.png";
+import exclusiveOfferCardImg2 from "/exclusiveOfferCardImg2.png";
+import exclusiveOfferCardImg3 from "/exclusiveOfferCardImg3.png";
+import addIcon from "/addIcon.svg";
+import dashboardIcon from "/dashboardIcon.svg";
+import listIcon from "/listIcon.svg";
+import uploadArea from "/uploadArea.svg";
+import totalBookingIcon from "/totalBookingIcon.svg";
+import totalRevenueIcon from "/totalRevenueIcon.svg";
 
 // export const assets = {
 //     logo,
@@ -83,7 +83,7 @@ export const exclusiveOffers = [
     description: "Enjoy a complimentary night and daily breakfast",
     priceOff: 25,
     expiryDate: "Aug 31",
-    image: "./exclusiveOfferCardImg1",
+    image: exclusiveOfferCardImg1,
   },
   {
     _id: 2,
@@ -91,7 +91,7 @@ export const exclusiveOffers = [
     description: "Special couples package including spa treatment",
     priceOff: 20,
     expiryDate: "Sep 20",
-    image: "./exclusiveOfferCardImg2",
+    image: exclusiveOfferCardImg2,
   },
   {
     _id: 3,
@@ -100,7 +100,7 @@ export const exclusiveOffers = [
       "Book 60 days in advance and save on your stay at any of our luxury properties worldwide.",
     priceOff: 30,
     expiryDate: "Sep 25",
-    image: "./exclusiveOfferCardImg3",
+    image: exclusiveOfferCardImg3,
   },
 ];
 
@@ -140,32 +140,32 @@ export const testimonials = [
 
 // Facility Icon
 export const facilityIcons = {
-  "Free WiFi": "./freeWifiIcon",
-  "Free Breakfast": "./freeBreakfastIcon",
-  "Room Service": "./roomServiceIcon",
-  "Mountain View": "./mountainIcon",
-  "Pool Access": "./poolIcon",
+  "Free WiFi": freeWifiIcon,
+  "Free Breakfast": freeBreakfastIcon,
+  "Room Service": roomServiceIcon,
+  "Mountain View": mountainIcon,
+  "Pool Access": poolIcon,
 };
 
 // For Room Details Page
 export const roomCommonData = [
   {
-    icon: "./homeIcon",
+    icon: homeIcon,
     title: "Clean & Safe Stay",
     description: "A well-maintained and hygienic space just for you.",
   },
   {
-    icon: "./badgeIcon",
+    icon: badgeIcon,
     title: "Enhanced Cleaning",
     description: "This host follows Staybnb's strict cleaning standards.",
   },
   {
-    icon: "./locationFilledIcon",
+    icon: locationFilledIcon,
     title: "Excellent Location",
     description: "90% of guests rated the location 5 stars.",
   },
   {
-    icon: "./heartIcon",
+    icon: heartIcon,
     title: "Smooth Check-In",
     description: "100% of guests gave check-in a 5-star rating.",
   },
@@ -206,7 +206,7 @@ export const roomsDummyData = [
     roomType: "Double Bed",
     pricePerNight: 399,
     amenities: ["Room Service", "Mountain View", "Pool Access"],
-    images: ["./roomImg1", "./roomImg2", "./roomImg3", "./roomImg4"],
+    images: [roomImg1, roomImg2, roomImg3, roomImg4],
     isAvailable: true,
     createdAt: "2025-04-10T06:26:04.013Z",
     updatedAt: "2025-04-10T06:26:04.013Z",
@@ -218,7 +218,7 @@ export const roomsDummyData = [
     roomType: "Double Bed",
     pricePerNight: 299,
     amenities: ["Room Service", "Mountain View", "Pool Access"],
-    images: ["./roomImg2", "./roomImg3", "./roomImg4", "./roomImg1"],
+    images: [roomImg2, roomImg3, roomImg4, roomImg1],
     isAvailable: true,
     createdAt: "2025-04-10T06:25:22.593Z",
     updatedAt: "2025-04-10T06:25:22.593Z",
@@ -230,7 +230,7 @@ export const roomsDummyData = [
     roomType: "Double Bed",
     pricePerNight: 249,
     amenities: ["Free WiFi", "Free Breakfast", "Room Service"],
-    images: ["./roomImg3", "./roomImg4", "./roomImg1", "./roomImg2"],
+    images: [roomImg3, roomImg4, roomImg1, roomImg2],
     isAvailable: true,
     createdAt: "2025-04-10T06:24:06.285Z",
     updatedAt: "2025-04-10T06:24:06.285Z",
@@ -242,7 +242,7 @@ export const roomsDummyData = [
     roomType: "Single Bed",
     pricePerNight: 199,
     amenities: ["Free WiFi", "Room Service", "Pool Access"],
-    images: ["./roomImg4", "./roomImg1", "./roomImg2", "./roomImg3"],
+    images: [roomImg4, roomImg1, roomImg2, roomImg3],
     isAvailable: true,
     createdAt: "2025-04-10T06:23:20.252Z",
     updatedAt: "2025-04-10T06:23:20.252Z",
