@@ -10,6 +10,7 @@ function Star({ rating }) {
             }
             alt="star-icon"
             className="w-4.5 h-4.5"
+            key={index}
           />
         ))}
     </>

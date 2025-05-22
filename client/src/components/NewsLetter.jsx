@@ -4,7 +4,7 @@ function NewsLetter() {
   return (
     <div className="flex flex-col items-center max-w-5xl lg:w-full rounded-2xl px-4 py-12 md:py-16 mx-2 lg:mx-auto my-20 bg-gray-900 text-white">
       <Title
-        title="Never Miss a Deal!"
+        title="Never Miss a Deal"
         subtitle="Subscribe to get the latest offers, new arrivals, and exclusive
           discounts"
       />

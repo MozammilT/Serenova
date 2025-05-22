@@ -34,7 +34,9 @@ function ExclusiveOffers() {
                 {item.title}
               </p>
               <p>{item.description}</p>
-              <p className="text-xs text-white/70 mt-3">Expires {item.expiryDate}</p>
+              <p className="text-xs text-white/70 mt-3">
+                Expires {item.expiryDate}
+              </p>
             </div>
             <button className="flex items-center gap-3.5 font-medium cursor-pointer mt-4 mb-5">
               Explore More

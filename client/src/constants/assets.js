@@ -179,6 +179,7 @@ export const userDummyData = {
   image:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCdPScxyHrwRaWlb9xsqSKwK9qmWV8VsgT8Q&s",
   role: "hotelOwner",
+  rating: 4,
   createdAt: "2025-03-25T09:29:16.367Z",
   updatedAt: "2025-04-10T06:34:48.719Z",
   __v: 1,
@@ -191,6 +192,7 @@ export const hotelDummyData = {
   name: "Urbanza Suites",
   address: "Main Road  123 Street , 23 Colony",
   contact: "+0123456789",
+  rating: 4,
   owner: userDummyData,
   city: "New York",
   createdAt: "2025-04-10T06:22:11.663Z",

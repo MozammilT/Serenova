@@ -102,9 +102,6 @@ function Footer() {
           <li>
             <a href="#">Terms</a>
           </li>
-          <li>
-            <a href="#">Sitemap</a>
-          </li>
         </ul>
       </div>
     </div>
