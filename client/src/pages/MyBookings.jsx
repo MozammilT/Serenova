@@ -35,7 +35,9 @@ function MyBookings() {
               <div className="flex flex-col gap-3 max-md:mt-3 min-md:ml-4">
                 <p className="font-playfair text-2xl">
                   {booking.hotel.name}
-                  <span className="font-inner text-sm ml-2">({booking.room.roomType})</span>
+                  <span className="font-inner text-sm ml-2">
+                    ({booking.room.roomType})
+                  </span>
                 </p>
                 <div className="flex items-center gap-1 text-sm text-gray-500">
                   <img src="locationIcon.svg" alt="location-icon" />
@@ -50,10 +52,43 @@ function MyBookings() {
             </div>
 
             {/* Date and Time */}
-            <div></div>
+            <div className="flex flex-row md:items-center md:gap-12 mt-3 gap-8">
+              <div>
+                <p>Check-In:</p>
+                <p className=" text-gray-500 text-sm">
+                  {new Date(booking.checkInDate).toDateString()}
+                </p>
+              </div>
+              <div>
+                <p>Check-Out:</p>
+                <p className=" text-gray-500 text-sm">
+                  {new Date(booking.checkOutDate).toDateString()}
+                </p>
+              </div>
+            </div>
 
             {/* Payment Status */}
-            <div></div>
+            <div className="flex flex-col items-start justify-center pt-3">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`h-3 w-3 rounded-full ${
+                    booking.isPaid ? "bg-green-500" : "bg-red-500"
+                  }`}
+                ></div>
+                <p
+                  className={`h-3 w-3 rounded-full ${
+                    booking.isPaid ? "text-green-500" : "text-red-500"
+                  } mb-2.5`}
+                >
+                  {booking.isPaid ? "Paid" : "Unpaid"}
+                </p>
+              </div>
+              {!booking.isPaid && (
+                <button className=" px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-900 hover:text-white transition-all cursor-pointer">
+                  Pay Now
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
