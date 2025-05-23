@@ -30,12 +30,12 @@ function MyBookings() {
               <img
                 src={booking.room.images[0]}
                 alt="room-image"
-                className="min-w-44 rounded shadow object-cover"
+                className="min-md:w-54 rounded shadow object-cover"
               />
-              <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+              <div className="flex flex-col gap-3 max-md:mt-3 min-md:ml-4">
                 <p className="font-playfair text-2xl">
                   {booking.hotel.name}
-                  <span className="font-inner text-sm">{`(${booking.room.roomType})`}</span>
+                  <span className="font-inner text-sm ml-2">({booking.room.roomType})</span>
                 </p>
                 <div className="flex items-center gap-1 text-sm text-gray-500">
                   <img src="locationIcon.svg" alt="location-icon" />
@@ -45,7 +45,7 @@ function MyBookings() {
                   <img src="guestsIcon.svg" alt="guests-icon" />
                   <span>{booking.guests}</span>
                 </div>
-                <p className="text-base">Total: {booking.totalPrice}</p>
+                <p className="text-base">Total: ${booking.totalPrice}</p>
               </div>
             </div>
 
