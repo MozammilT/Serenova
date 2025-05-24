@@ -26,12 +26,12 @@ function HotelRegistration() {
               type="text"
               reqired
               placeholder="Enter Your Hotel Name"
-              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
             />
           </div>
 
           {/* Phone */}
-          <div className="w-full mt-10">
+          <div className="w-full mt-6">
             <label htmlfor="phone" className="font-medium text-gray-500">
               Phone
             </label>
@@ -40,12 +40,12 @@ function HotelRegistration() {
               required
               type="text"
               placeholder="Enter Your Phone Number"
-              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
             />
           </div>
 
           {/* Address */}
-          <div className="w-full mt-10">
+          <div className="w-full mt-6">
             <label htmlfor="address" className="font-medium text-gray-500">
               Address
             </label>
@@ -54,18 +54,18 @@ function HotelRegistration() {
               required
               type="text"
               placeholder="Enter Your Address"
-              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
             />
           </div>
 
           {/* Select City Dropdown */}
-          <div className="w-full mt-10 max-w-60 mr-auto">
+          <div className="w-full mt-6 max-w-60 mr-auto">
             <label htmlfor="city" className="font-medium text-gray-500">
               City
             </label>
             <select
               id="city"
-              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
             >
               <option>Select City</option>
               {cities.map((city) => (
@@ -75,6 +75,9 @@ function HotelRegistration() {
               ))}
             </select>
           </div>
+          <button className="bg-gray-800 hover:bg-gray-900 transition-all text-white mr-auto mt-6 px-6 py-2 rounded cursor-pointer">
+            Register
+          </button>
         </div>
       </form>
     </div>
