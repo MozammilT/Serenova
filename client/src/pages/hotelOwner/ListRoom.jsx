@@ -44,7 +44,7 @@ function ListRoom() {
                 </td>
                 <td className="py-3 px-4 border-t border-gray-300 text-sm text-red-500 text-center">
                   <label class="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
-                    <input type="checkbox" class="sr-only peer" />
+                    <input type="checkbox" class="sr-only peer" checked={item.isAvailable} />
                     <div class="w-16 h-8 bg-slate-300 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
                     <span class="dot absolute left-1 top-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-8"></span>
                   </label>
