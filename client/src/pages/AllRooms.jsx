@@ -81,7 +81,7 @@ function AllRooms() {
                   {room.hotel.name}
                 </p>
                 <div className="flex items-center">
-                  <Star />
+                  <Star rating={room.hotel.rating} />
                   <p className="ml-2">200+ Review</p>
                 </div>
                 <div className="flex items-center gap-1 text-gray-500 mt-2 text-sm">
