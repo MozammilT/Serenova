@@ -1,20 +1,18 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
+  const db = mongoose.connection;
+  db.on("connected", () => {
+    console.log("✅ MongoDB database connected");
+  });
+  db.on("error", (err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
+  db.on("disconnected", () => {
+    console.log("⚠️ MongoDB disconnected");
+  });
   try {
-    const db = mongoose.connection;
-
-    db.on("connected", () => {
-      console.log("✅ MongoDB connected successfully");
-    });
-    db.on("error", (err) => {
-      console.error("❌ MongoDB connection error:", err);
-    });
-    db.on("disconnected", () => {
-      console.log("⚠️ MongoDB disconnected");
-    });
-    
-    await mongoose.connect(`${process.env.MONGODB_URI}/serenova`)
+    await mongoose.connect(`${process.env.MONGODB_URI}`);
   } catch (err) {
     console.log(err.message);
   }
