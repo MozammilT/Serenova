@@ -14,7 +14,14 @@ const clerkWebhooks = async (req, res) => {
       .json({ success: false, message: "Method not allowed" });
   }
 
-  const payload = req.body; // Get the raw body from bodyParser
+  // Get the raw body as a buffer and convert to string
+  const rawBody = req.body;
+  const payload = Buffer.isBuffer(rawBody)
+    ? rawBody.toString("utf8")
+    : typeof rawBody === "string"
+    ? rawBody
+    : JSON.stringify(rawBody);
+
   const headers = {
     "svix-id": req.headers["svix-id"],
     "svix-timestamp": req.headers["svix-timestamp"],
@@ -23,6 +30,8 @@ const clerkWebhooks = async (req, res) => {
 
   // Log headers for debugging
   console.log("Webhook Headers:", headers);
+  console.log("Raw Body Type:", typeof rawBody);
+  console.log("Processed Payload Type:", typeof payload);
 
   try {
     if (!process.env.CLERK_WEBHOOK_SECRET) {
@@ -30,7 +39,7 @@ const clerkWebhooks = async (req, res) => {
     }
 
     const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-    const parsedBody = wh.verify(JSON.stringify(payload), headers);
+    const parsedBody = wh.verify(payload, headers);
 
     console.log("Webhook Event Type:", parsedBody.type);
     console.log("Webhook Data:", parsedBody.data);
@@ -79,7 +88,9 @@ const clerkWebhooks = async (req, res) => {
       message: err.message,
       stack: err.stack,
       headers: headers,
-      body: typeof payload === "string" ? payload : JSON.stringify(payload),
+      body: payload,
+      rawBodyType: typeof rawBody,
+      isBuffer: Buffer.isBuffer(rawBody),
     });
     res.status(400).json({ success: false, message: err.message });
   }
