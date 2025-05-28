@@ -1,33 +1,24 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import cors from "cors";
-import bodyParser from "body-parser";
-import { clerkMiddleware } from "@clerk/express";
 import connectDB from "./config/db.js";
-import clerkWebhooks from "./controller/clerk-webhook.js";
+import { clerkMiddleware } from "@clerk/express";
+import clerkWebhook from "./controller/clerk-webhook.js";
 
-dotenv.config();
 connectDB();
+
+const PORT = process.env.PORT;
 const app = express();
-const port = process.env.PORT;
-
-app.use(cors());
-
-// Webhook endpoint - must come before JSON body parser
-app.post(
-  "/api/clerk",
-  express.raw({ type: "application/json" }), // Use express.raw instead of bodyParser
-  clerkWebhooks
-);
-
-// Regular middleware for other routes
 app.use(express.json());
 app.use(clerkMiddleware());
+app.use(cors());
+
+app.use("/api/webhooks", clerkWebhook);
 
 app.get("/", (req, res) => {
-  res.send("Backend Server is running successfully");
+  res.send("API is running");
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

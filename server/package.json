@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "ngrok": "ngrok http 3000"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +24,8 @@
     "mongoose": "^8.15.0",
     "multer": "^2.0.0",
     "svix": "^1.66.0"
+  },
+  "devDependencies": {
+    "ngrok": "^5.0.0-beta.2"
   }
 }
