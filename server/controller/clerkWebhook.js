@@ -3,7 +3,6 @@ import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
   console.log("Webhook received. Path:", req.path);
-  console.log("Headers:", req.headers);
 
   try {
     console.log("Webhook received");
@@ -30,7 +29,7 @@ const clerkWebhooks = async (req, res) => {
     console.log("Headers:", headers);
 
     //Verify the headers
-    const parsedBody = await whook.verify(JSON.stringify(req.body), headers);
+    const parsedBody = await whook.verify(req.body, headers);
 
     const event = parsedBody;
     const { id, email_addresses, first_name, last_name, image_url } =
@@ -38,6 +37,7 @@ const clerkWebhooks = async (req, res) => {
 
     //Getting Data from req body
     const { data, type } = parsedBody;
+    console.log("Parsed Body:", parsedBody);
 
     const userData = {
       _id: id,
@@ -77,7 +77,7 @@ const clerkWebhooks = async (req, res) => {
   } catch (err) {
     console.error("Headers at failure:", req.headers);
     console.error("Body at failure:", req.body);
-    console.log("Webhook error: ", err.message);
+    console.error("Webhook error:", err);
     res.status(400).json({ success: false, message: err.message });
   }
 };

@@ -12,6 +12,11 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors());
+app.post(
+  "/api/clerk",
+  bodyParser.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
 //Middleware
 app.use(express.json());
@@ -21,12 +26,6 @@ app.use((req, res, next) => {
   if (req.path === "/api/clerk") return next();
   return clerkMiddleware()(req, res, next);
 });
-
-app.post(
-  "/api/clerk",
-  bodyParser.raw({ type: "application/json" }),
-  clerkWebhooks
-);
 
 app.get("/", (req, res) => {
   res.send("Backend Server is running successfully");
