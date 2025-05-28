@@ -4,7 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { clerkMiddleware } from "@clerk/express";
 import connectDB from "./config/db.js";
-import clerkWebhooks from "./controller/clerkWebhook.js";
+import clerkWebhooks from "./controller/clerkwebhook.js";
 
 dotenv.config();
 connectDB();

@@ -1,10 +1,9 @@
 import { Webhook } from "svix";
-import { buffer } from "micro";
 import User from "../models/user.js";
 
 export const config = {
   api: {
-    bodyParser: false, // tells Vercel NOT to parse the body
+    bodyParser: false,
   },
 };
 
@@ -15,16 +14,26 @@ const clerkWebhooks = async (req, res) => {
       .json({ success: false, message: "Method not allowed" });
   }
 
-  const payload = await buffer(req); // get raw buffer
+  const payload = req.body; // Get the raw body from bodyParser
   const headers = {
     "svix-id": req.headers["svix-id"],
     "svix-timestamp": req.headers["svix-timestamp"],
     "svix-signature": req.headers["svix-signature"],
   };
 
+  // Log headers for debugging
+  console.log("Webhook Headers:", headers);
+
   try {
+    if (!process.env.CLERK_WEBHOOK_SECRET) {
+      throw new Error("CLERK_WEBHOOK_SECRET is not configured");
+    }
+
     const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-    const parsedBody = wh.verify(payload, headers);
+    const parsedBody = wh.verify(JSON.stringify(payload), headers);
+
+    console.log("Webhook Event Type:", parsedBody.type);
+    console.log("Webhook Data:", parsedBody.data);
 
     const { type, data } = parsedBody;
     const {
@@ -45,15 +54,20 @@ const clerkWebhooks = async (req, res) => {
       image: image_url || "",
     };
 
+    console.log("Processing user data:", userData);
+
     switch (type) {
       case "user.created":
         await User.create(userData);
+        console.log("User created successfully:", id);
         break;
       case "user.updated":
         await User.findByIdAndUpdate(id, userData);
+        console.log("User updated successfully:", id);
         break;
       case "user.deleted":
         await User.findByIdAndDelete(id);
+        console.log("User deleted successfully:", id);
         break;
       default:
         console.log("Unhandled event type:", type);
@@ -61,7 +75,12 @@ const clerkWebhooks = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Webhook processed" });
   } catch (err) {
-    console.error("Webhook verification failed", err);
+    console.error("Webhook error details:", {
+      message: err.message,
+      stack: err.stack,
+      headers: headers,
+      body: typeof payload === "string" ? payload : JSON.stringify(payload),
+    });
     res.status(400).json({ success: false, message: err.message });
   }
 };
