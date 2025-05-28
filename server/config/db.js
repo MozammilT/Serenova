@@ -12,9 +12,7 @@ const connectDB = async () => {
     console.log("⚠️ MongoDB disconnected");
   });
   try {
-    await mongoose.connect(`${process.env.MONGODB_URI}`, {
-      dbName: "Serenova"
-    });
+    await mongoose.connect(`${process.env.MONGODB_URI}`);
     console.log(
       "MongoDB connected to database:",
       mongoose.connection.db.databaseName
