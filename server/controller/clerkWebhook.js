@@ -1,83 +1,67 @@
-import User from "../models/user.js";
 import { Webhook } from "svix";
+import { buffer } from "micro";
+import User from "../models/user.js";
+
+export const config = {
+  api: {
+    bodyParser: false, // tells Vercel NOT to parse the body
+  },
+};
 
 const clerkWebhooks = async (req, res) => {
-  console.log("Webhook received. Path:", req.path);
+  if (req.method !== "POST") {
+    return res
+      .status(405)
+      .json({ success: false, message: "Method not allowed" });
+  }
+
+  const payload = await buffer(req); // get raw buffer
+  const headers = {
+    "svix-id": req.headers["svix-id"],
+    "svix-timestamp": req.headers["svix-timestamp"],
+    "svix-signature": req.headers["svix-signature"],
+  };
 
   try {
-    console.log("Webhook received");
+    const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+    const parsedBody = wh.verify(payload, headers);
 
-    //Create a Svix instance with clerk webhook  secret.
-    const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-
-    //Get Headers
-    const headers = {
-      "svix-id": req.headers["svix-id"],
-      "svix-timestamp": req.headers["svix-timestamp"],
-      "svix-signature": req.headers["svix-signature"],
-    };
-
-    if (
-      !headers["svix-id"] ||
-      !headers["svix-timestamp"] ||
-      !headers["svix-signature"]
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing required Svix headers" });
-    }
-    console.log("Headers:", headers);
-
-    //Verify the headers
-    const parsedBody = await whook.verify(req.body, headers);
-
-    const event = parsedBody;
-    const { id, email_addresses, first_name, last_name, image_url } =
-      event.data;
-
-    //Getting Data from req body
-    const { data, type } = parsedBody;
-    console.log("Parsed Body:", parsedBody);
+    const { type, data } = parsedBody;
+    const {
+      id,
+      email_addresses,
+      first_name,
+      last_name,
+      image_url,
+      primary_email_id,
+    } = data;
 
     const userData = {
       _id: id,
       email:
-        email_addresses?.find?.(
-          (email) => email.id === event.data.primary_email_id
-        )?.email_address || "",
+        email_addresses?.find?.((email) => email.id === primary_email_id)
+          ?.email_address || "",
       username: [first_name, last_name].filter(Boolean).join(" ") || "Unknown",
       image: image_url || "",
     };
-    console.log("Webhook type:", type);
-    console.log("User data to save:", userData);
 
-    //Switch cases for different events - mongodb functions below to CRUD data in Atlas
     switch (type) {
-      case "user.created": {
+      case "user.created":
         await User.create(userData);
         break;
-      }
-
-      case "user.updated": {
-        await User.findByIdAndUpdate(data.id, userData);
+      case "user.updated":
+        await User.findByIdAndUpdate(id, userData);
         break;
-      }
-
-      case "user.deleted": {
-        await User.findByIdAndDelete(data.id);
+      case "user.deleted":
+        await User.findByIdAndDelete(id);
         break;
-      }
-
       default:
-        console.log(`Unhandled webhook event type: ${type}`);
-        break;
+        console.log("Unhandled event type:", type);
     }
 
-    res.json({ success: true, message: "Webhook Received" });
+    res.status(200).json({ success: true, message: "Webhook processed" });
   } catch (err) {
-    console.error("Headers at failure:", req.headers);
-    console.error("Body at failure:", req.body);
-    console.error("Webhook error:", err);
+    console.error("Webhook verification failed", err);
     res.status(400).json({ success: false, message: err.message });
   }
 };

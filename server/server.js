@@ -18,14 +18,14 @@ app.post(
   clerkWebhooks
 );
 
-//Middleware
-app.use(express.json());
-app.use(clerkMiddleware());
-
 app.use((req, res, next) => {
   if (req.path === "/api/clerk") return next();
   return clerkMiddleware()(req, res, next);
 });
+
+//Middleware
+app.use(express.json());
+app.use(clerkMiddleware());
 
 app.get("/", (req, res) => {
   res.send("Backend Server is running successfully");
