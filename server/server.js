@@ -13,19 +13,14 @@ const port = process.env.PORT;
 
 app.use(cors());
 
-// Webhook endpoint with raw body parser
+// Webhook endpoint - must come before JSON body parser
 app.post(
   "/api/clerk",
-  bodyParser.raw({ type: "application/json" }),
+  express.raw({ type: "application/json" }), // Use express.raw instead of bodyParser
   clerkWebhooks
 );
 
-app.use((req, res, next) => {
-  if (req.path === "/api/clerk") return next();
-  return clerkMiddleware()(req, res, next);
-});
-
-//Middleware
+// Regular middleware for other routes
 app.use(express.json());
 app.use(clerkMiddleware());
 

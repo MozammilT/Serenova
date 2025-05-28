@@ -1,55 +1,59 @@
 import { Webhook } from "svix";
 import User from "../models/user.js";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
 const clerkWebhooks = async (req, res) => {
+  // Verify the request method
   if (req.method !== "POST") {
-    return res
-      .status(405)
-      .json({ success: false, message: "Method not allowed" });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
+  // Verify the webhook secret is configured
+  if (!webhookSecret) {
+    console.error("Webhook secret not configured");
+    return res.status(500).json({ message: "Webhook secret not configured" });
+  }
+
+  // Get the headers
+  const svix_id = req.headers["svix-id"];
+  const svix_timestamp = req.headers["svix-timestamp"];
+  const svix_signature = req.headers["svix-signature"];
+
+  // If there are missing headers, return 400
+  if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.error("Missing svix headers");
+    return res.status(400).json({
+      message: "Missing svix headers",
+      headers: JSON.stringify(req.headers),
+    });
+  }
+
+  console.log("Headers received:", {
+    "svix-id": svix_id,
+    "svix-timestamp": svix_timestamp,
+    "svix-signature": svix_signature,
+  });
+
   try {
-    // Get the raw request body as a buffer
-    const rawBody = req.body;
+    const wh = new Webhook(webhookSecret);
 
-    const headers = {
-      "svix-id": req.headers["svix-id"],
-      "svix-timestamp": req.headers["svix-timestamp"],
-      "svix-signature": req.headers["svix-signature"],
-    };
+    // Get the raw body as a string
+    const payload = req.body.toString("utf8");
+    console.log("Received webhook payload:", payload.substring(0, 100) + "...");
 
-    // Log headers and body info for debugging
-    console.log("Webhook Headers:", headers);
-    console.log("Raw Body Type:", typeof rawBody);
-    console.log("Is Buffer:", Buffer.isBuffer(rawBody));
+    const evt = wh.verify(payload, {
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
+    });
 
-    if (!process.env.CLERK_WEBHOOK_SECRET) {
-      throw new Error("CLERK_WEBHOOK_SECRET is not configured");
-    }
-
-    // Create webhook instance
-    const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-
-    // Convert buffer to string for verification
-    const stringBody = rawBody.toString("utf8");
-    console.log("String Body:", stringBody.substring(0, 100) + "..."); // Log first 100 chars
-
-    // Verify the webhook
-    const parsedBody = wh.verify(stringBody, headers);
-
-    console.log("Webhook Event Type:", parsedBody.type);
-    console.log(
-      "Webhook Data:",
-      JSON.stringify(parsedBody.data).substring(0, 100) + "..."
-    );
-
-    const { type, data } = parsedBody;
+    // Handle the webhook
+    const { type, data } = evt;
+    console.log("Webhook event:", {
+      type,
+      data: JSON.stringify(data).substring(0, 100) + "...",
+    });
 
     switch (type) {
       case "user.created": {
@@ -73,7 +77,7 @@ const clerkWebhooks = async (req, res) => {
           image: image_url || "",
         };
 
-        console.log("Creating user with data:", userData);
+        console.log("Creating user:", userData);
         await User.create(userData);
         console.log("User created successfully:", id);
         break;
@@ -98,7 +102,7 @@ const clerkWebhooks = async (req, res) => {
           image: image_url || "",
         };
 
-        console.log("Updating user with data:", userData);
+        console.log("Updating user:", userData);
         await User.findByIdAndUpdate(id, userData);
         console.log("User updated successfully:", id);
         break;
@@ -114,17 +118,25 @@ const clerkWebhooks = async (req, res) => {
         console.log("Unhandled event type:", type);
     }
 
-    res.status(200).json({ success: true, message: "Webhook processed" });
-  } catch (err) {
-    console.error("Webhook error details:", {
-      message: err.message,
-      stack: err.stack,
-      headers: req.headers,
-      rawBodyType: typeof req.body,
-      isBuffer: Buffer.isBuffer(req.body),
-      secret: process.env.CLERK_WEBHOOK_SECRET ? "Present" : "Missing",
+    return res.status(200).json({
+      success: true,
+      message: `Webhook processed successfully: ${type}`,
     });
-    res.status(400).json({ success: false, message: err.message });
+  } catch (err) {
+    console.error("Webhook verification failed:", {
+      error: err.message,
+      stack: err.stack,
+      headers: {
+        "svix-id": svix_id,
+        "svix-timestamp": svix_timestamp,
+        "svix-signature": svix_signature,
+      },
+    });
+    return res.status(400).json({
+      success: false,
+      message: "Webhook verification failed",
+      error: err.message,
+    });
   }
 };
 
