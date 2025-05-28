@@ -17,7 +17,7 @@ const clerkWebhooks = async (req, res) => {
     console.log("Headers:", headers);
 
     //Verify the headers
-    await whook.verify(JSON.stringify(req.body), headers);
+    const parsedBody = await whook.verify(JSON.stringify(req.body), headers);
 
     //Getting Data from req body
     const { data, type } = parsedBody;
@@ -53,6 +53,8 @@ const clerkWebhooks = async (req, res) => {
 
     res.json({ success: true, message: "Webhook Received" });
   } catch (err) {
+    console.error("Headers at failure:", req.headers);
+    console.error("Body at failure:", req.body);
     console.log("Webhook error: ", err.message);
     res.status(400).json({ success: false, message: err.message });
   }
