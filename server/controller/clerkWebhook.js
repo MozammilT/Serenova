@@ -36,9 +36,6 @@ const clerkWebhooks = async (req, res) => {
     const { id, email_addresses, first_name, last_name, image_url } =
       event.data;
 
-    console.log("Webhook type:", type);
-    console.log("User data to save:", userData);
-
     //Getting Data from req body
     const { data, type } = parsedBody;
 
@@ -51,6 +48,8 @@ const clerkWebhooks = async (req, res) => {
       username: [first_name, last_name].filter(Boolean).join(" ") || "Unknown",
       image: image_url || "",
     };
+    console.log("Webhook type:", type);
+    console.log("User data to save:", userData);
 
     //Switch cases for different events - mongodb functions below to CRUD data in Atlas
     switch (type) {
