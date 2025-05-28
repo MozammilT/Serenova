@@ -14,6 +14,16 @@ const clerkWebhooks = async (req, res) => {
       "svix-timestamp": req.headers["svix-timestamp"],
       "svix-signature": req.headers["svix-signature"],
     };
+
+    if (
+      !headers["svix-id"] ||
+      !headers["svix-timestamp"] ||
+      !headers["svix-signature"]
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required Svix headers" });
+    }
     console.log("Headers:", headers);
 
     //Verify the headers
