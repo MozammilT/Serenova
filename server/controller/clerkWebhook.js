@@ -2,6 +2,9 @@ import User from "../models/user.js";
 import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
+  console.log("Webhook received. Path:", req.path);
+  console.log("Headers:", req.headers);
+
   try {
     console.log("Webhook received");
 
@@ -29,14 +32,24 @@ const clerkWebhooks = async (req, res) => {
     //Verify the headers
     const parsedBody = await whook.verify(JSON.stringify(req.body), headers);
 
+    const event = parsedBody;
+    const { id, email_addresses, first_name, last_name, image_url } =
+      event.data;
+
+    console.log("Webhook type:", type);
+    console.log("User data to save:", userData);
+
     //Getting Data from req body
     const { data, type } = parsedBody;
 
     const userData = {
-      _id: data.id,
-      email: data.email_addresses[0].email_address,
-      username: data.first_name + " " + data.last_name,
-      image: data.image_url,
+      _id: id,
+      email:
+        email_addresses?.find?.(
+          (email) => email.id === event.data.primary_email_id
+        )?.email_address || "",
+      username: [first_name, last_name].filter(Boolean).join(" ") || "Unknown",
+      image: image_url || "",
     };
 
     //Switch cases for different events - mongodb functions below to CRUD data in Atlas

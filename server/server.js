@@ -17,8 +17,16 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
-//API to listen for Clerk Webhooks
-app.use("/api/clerk", clerkWebhooks);
+app.use((req, res, next) => {
+  if (req.path === "/api/clerk") return next();
+  return clerkMiddleware()(req, res, next);
+});
+
+app.post(
+  "/api/clerk",
+  bodyParser.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
 app.get("/", (req, res) => {
   res.send("Backend Server is running successfully");
