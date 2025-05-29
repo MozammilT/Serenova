@@ -1,4 +1,5 @@
 // Get /api/user route in the server.js file
+
 export const getUserData = async (req, res) => {
   console.log("[userController] getUserData called");
   try {
@@ -15,6 +16,25 @@ export const getUserData = async (req, res) => {
     res.json({ sucess: true, role, recentSearchcities });
   } catch (err) {
     console.error("[userController] Error:", err);
+    res.json({ success: false, message: err.message });
+  }
+};
+
+//Store User recent Serched cities
+export const storeRecentSearchedCities = async (req, res) => {
+  try {
+    const { recentSearchCity } = req.body;
+    const user = req.user;
+
+    if(user.recentSearchcities.length > 3) {
+      user.recentSearchcities.push(recentSearchCity);
+    } else {
+      user.recentSearchcities.shift();
+      user.recentSearchcities.push(recentSearchCity)
+    }
+    await user.save();
+  } catch (err) {
+    console.log("error in storeRecentSearchedCities:", err);
     res.json({ success: false, message: err.message });
   }
 };
