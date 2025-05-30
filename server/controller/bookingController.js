@@ -139,7 +139,7 @@ export const getUserBookings = async (req, res) => {
 };
 
 //API to get all bookings for a particular hotel
-//? Route - GET => /api/bookings/owner
+//? Route - GET => /api/bookings/hotel
 
 export const getHotelBooking = async (req, res) => {
   try {
