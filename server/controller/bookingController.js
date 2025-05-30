@@ -45,7 +45,7 @@ export const checkAvailabilityAPI = async (req, res) => {
     res.status(200).json({ success: true, isAvailable });
   } catch (err) {
     console.log("Error in checkAvailabilityAPI function: ", err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ success: false, message: "Failed to check the availability of room" });
   }
 };
 
@@ -131,13 +131,51 @@ export const getUserBookings = async (req, res) => {
       .sort({ createdAt: -1 });
 
     console.log("[getUserBooking] All bookings fetched for user: ", user);
-    res.status(200).json({ success: true }, bookings);
+    res.status(200).json({ success: true, bookings });
   } catch (err) {
     console.error("Error in getUserBookings function: ", err);
-    res.status(500).json({ succes: false, message: err.message });
+    res.status(500).json({ succes: false, message: "Failed to get the user bookings" });
   }
 };
 
-
 //API to get all bookings for a particular hotel
 //? Route - GET => /api/bookings/owner
+
+export const getHotelBooking = async (req, res) => {
+  try {
+    const hotel = await Hotel.findOne({ owner: req.auth.userId });
+    if (!hotel) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No hotel found" });
+    }
+    console.log("[getHotelBooking] Hotel found:", hotel);
+
+    const bookings = await Booking.find({ hotel: hotel._id })
+      .populate("user room hotel")
+      .sort({ createdAt: -1 });
+    console.log("[getHotelBooking] Bookings found:", bookings);
+
+    //Number of total bookings done in this hotel
+    const totalBookings = bookings.length;
+    console.log("[getHotelBooking] Total bookings:", totalBookings);
+
+    //Total revenue
+    const totalRevenue = bookings.reduce(
+      (acc, booking) => acc + booking.totalPrice,
+      0
+    );
+    console.log("[getHotelBooking] Total revenue:", totalRevenue);
+
+    console.log(
+      `[getHotelBooking] All bookings for hotel ${hotel} fetched successfully`
+    );
+    res.status(200).json({
+      success: true,
+      dashBoardData: { totalBookings, totalRevenue, bookings },
+    });
+  } catch (err) {
+    console.error("Error in getHotelBooking function: ", err);
+    res.status(500).json({ success: false, message: "Failed to fetch bookings" });
+  }
+};
