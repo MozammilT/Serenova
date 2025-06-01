@@ -10,15 +10,19 @@ import roomRouter from "./routes/roomRoutes.js";
 import bookingRoute from "./routes/bookingsRoute.js";
 import connectCloudinary from "./config/cloudinary.js";
 
-
 connectDB();
 connectCloudinary();
 
 const PORT = process.env.PORT;
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:3000"], // Add your frontend URL
+    credentials: true,
+  })
+);
 app.use(clerkMiddleware());
-app.use(cors());
 
 app.use("/api/webhooks", clerkWebhook);
 

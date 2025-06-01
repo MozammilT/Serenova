@@ -3,6 +3,15 @@
 export const getUserData = async (req, res) => {
   console.log("[userController] getUserData called");
   try {
+    // TEMP: Mock user object if req.user is missing
+    if (!req.user) {
+      console.warn("[userController] req.user is undefined, mocking user...");
+      req.user = {
+        role: "guest",
+        recentSearchcities: ["Delhi", "Mumbai", "Goa"],
+      };
+    }
+
     console.log("[userController] req.user:", req.user);
 
     const role = req.user.role;
@@ -13,7 +22,7 @@ export const getUserData = async (req, res) => {
       recentSearchcities,
     });
 
-    res.json({ sucess: true, role, recentSearchcities });
+    res.json({ success: true, role, recentSearchcities });
   } catch (err) {
     console.error("[userController] Error:", err);
     res.json({ success: false, message: err.message });
@@ -26,11 +35,11 @@ export const storeRecentSearchedCities = async (req, res) => {
     const { recentSearchCity } = req.body;
     const user = req.user;
 
-    if(user.recentSearchcities.length > 3) {
+    if (user.recentSearchcities.length >= 3) {
       user.recentSearchcities.push(recentSearchCity);
     } else {
       user.recentSearchcities.shift();
-      user.recentSearchcities.push(recentSearchCity)
+      user.recentSearchcities.push(recentSearchCity);
     }
     await user.save();
   } catch (err) {
