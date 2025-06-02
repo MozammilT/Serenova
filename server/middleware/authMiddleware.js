@@ -1,5 +1,4 @@
 import User from "../models/user.js";
-import jwt from "jsonwebtoken";
 
 //Middleware to check if the User is authenticated
 export const protect = async (req, res, next) => {
@@ -18,7 +17,7 @@ export const protect = async (req, res, next) => {
       .json({ success: false, message: "Authentication required" });
   }
 
-  const userId = req.auth.userId;
+  const {userId} = req.auth();
   if (!userId) {
     console.warn("[authMiddleware] No userId found in req.auth");
     return res
