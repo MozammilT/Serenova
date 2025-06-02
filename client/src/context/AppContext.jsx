@@ -19,22 +19,39 @@ export const AppProvider = ({ children }) => {
   const [searchedCities, setSearchedCities] = useState([]);
 
   const fetchUser = async () => {
+    console.group("fetchUser - Debug Info");
     try {
+      console.log("Fetching user details...");
+      const token = await getToken();
+      console.log("Token obtained:", token ? "✓" : "✗");
+
       const { data } = await axios.get("/api/user", {
-        headers: { Authorization: `Bearer ${await getToken()}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("API Response:", data);
 
       if (data.success) {
+        console.log("User Role:", data.role);
+        console.log("Recent Searches:", data.recentSearchcities);
         setIsOwner(data.role === "hotelOwner");
         setSearchedCities(data.recentSearchcities);
       } else {
-        //Retry Fetching use details after 5 seconds
+        console.warn("Fetch failed, retrying in 5 seconds...");
         setTimeout(() => {
+          console.log("Retrying fetch...");
           fetchUser();
         }, 5000);
       }
     } catch (err) {
+      console.error("Error in fetchUser:", {
+        message: err.message,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+      });
       toast.error(err.message);
+    } finally {
+      console.groupEnd();
     }
   };
 
