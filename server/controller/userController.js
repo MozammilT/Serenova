@@ -16,10 +16,12 @@ export const getUserData = async (req, res) => {
 
     const role = req.user.role;
     const recentSearchcities = req.user.recentSearchcities;
+    const id = req.user._id;
 
     console.log("[userController] Responding with:", {
       role,
       recentSearchcities,
+      id,
     });
 
     res.json({ success: true, role, recentSearchcities });
