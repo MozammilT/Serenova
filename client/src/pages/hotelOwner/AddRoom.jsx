@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Title from "../../components/Title";
+import { useAppContext } from "../../context/AppContext.jsx";
+import { toast } from "react-hot-toast";
 
 function AddRoom() {
   const [images, setImages] = useState({
@@ -9,7 +11,7 @@ function AddRoom() {
     4: null,
   });
   const [inputs, setInputs] = useState({
-    rommType: "",
+    roomType: "",
     pricePerNight: 0,
     amenities: {
       "Free Wifi": false,
@@ -19,9 +21,109 @@ function AddRoom() {
       "Pool Access": false,
     },
   });
+  const [loading, setLoading] = useState(false);
+  const { axios, getToken } = useAppContext();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    // Debug logs for form values
+    console.log("Submit Handler Triggered");
+    console.log("inputs:", inputs);
+    console.log("images:", images);
+
+    //Check if all inputs are filled
+    if (
+      !inputs.roomType ||
+      !inputs.pricePerNight ||
+      Object.values(inputs.amenities).every((v) => !v) ||
+      !Object.values(images).some((img) => img)
+    ) {
+      console.log("Validation failed:");
+      console.log("roomType empty:", !inputs.roomType);
+      console.log("pricePerNight empty:", !inputs.pricePerNight);
+      console.log(
+        "amenities none selected:",
+        Object.values(inputs.amenities).every((v) => !v)
+      );
+      console.log(
+        "no images selected:",
+        !Object.values(images).some((img) => img)
+      );
+      toast.error("All fields required");
+      return;
+    }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("roomType", inputs.roomType);
+      formData.append("pricePerNight", inputs.pricePerNight);
+
+      //Convert amenities to string
+      const amenities = Object.keys(inputs.amenities).filter(
+        (key) => inputs.amenities[key]
+      );
+      console.log("Selected amenities:", amenities);
+      amenities.forEach((item) => {
+        formData.append("amenities", item);
+      });
+
+      //Creating a Object for images
+      Object.keys(images).forEach((key) => {
+        if (images[key]) {
+          console.log(`Appending image for key ${key}:`, images[key]);
+          formData.append("images", images[key]);
+        }
+      });
+
+      console.log("FormData before submit:", formData);
+
+      const { data } = await toast.promise(
+        axios.post("/api/rooms", formData, {
+          headers: { Authorization: `Bearer ${await getToken()}` },
+        }),
+        {
+          loading: "Adding room...",
+          success: "Room added successfully",
+          error: "Failed to add room. Please try again.",
+        }
+      );
+
+      if (data.success) {
+        // toast.success(data.message);
+        setInputs({
+          roomType: "",
+          pricePerNight: 0,
+          amenities: {
+            "Free Wifi": false,
+            "Free Breakfast": false,
+            "Room Service": false,
+            "Mountain View": false,
+            "Pool Access": false,
+          },
+        });
+        setImages({
+          1: null,
+          2: null,
+          3: null,
+          4: null,
+        });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+      console.error(
+        "[submitHandler] error when submitting the add room form: ",
+        err
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <form>
+    <form onSubmit={submitHandler}>
       <Title
         align="left"
         font="Outfit"
@@ -61,7 +163,7 @@ function AddRoom() {
           <p className="text-gray-800 mt-4">Room Type</p>
           <select
             onChange={(e) => setInputs({ ...inputs, roomType: e.target.value })}
-            value={inputs.rommType}
+            value={inputs.roomType}
             className="border opacity-70 border-gray-300 mt-1 rounded p-2 w-full"
           >
             <option value="" disabled defaultValue>
@@ -71,7 +173,6 @@ function AddRoom() {
             <option value="Double Bed">Double Bed</option>
             <option value="Luxury Room">Luxury Room</option>
             <option value="Family Suite">Family Suite</option>
-            <option value="Single Bed">Single Bed</option>
           </select>
         </div>
 
@@ -116,8 +217,13 @@ function AddRoom() {
           </div>
         ))}
       </div>
-      <button className="bg-primary text-white px-8 py-2 rounded mt-8 cursor-pointer">
-        Add Room
+      <button
+        className={`${
+          loading ? "bg-[#18429e]" : " bg-primary"
+        } text-white px-8 py-2 rounded mt-8 cursor-pointer`}
+        disabled={loading}
+      >
+        {loading ? "Loading" : "Add Room"}
       </button>
     </form>
   );
