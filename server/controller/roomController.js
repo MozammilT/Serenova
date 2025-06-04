@@ -6,7 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 export const createRoom = async (req, res) => {
   try {
     const { roomType, pricePerNight, amenities } = req.body;
-    const hotel = await Hotel.findOne({ owner: req.auth.userId });
+    const hotel = await Hotel.findOne({ owner: req.auth().userId });
 
     if (!hotel) return res.json({ sucess: false, message: "No Hotel found" });
 
@@ -24,7 +24,7 @@ export const createRoom = async (req, res) => {
       hotel: hotel._id,
       roomType,
       pricePerNight,
-      amenities: JSON.parse(amenities),
+      amenities,
       images,
     });
     res.json({ success: true, message: "Room created successfully" });
