@@ -56,10 +56,23 @@ export const getRooms = async (req, res) => {
 // API to get all Room for a specific Hotel
 export const getOwnerRoom = async (req, res) => {
   try {
-    const hotelData = await Hotel({ owner: req.auth.userId });
+    console.log("getOwnerRoom called. req.auth():", req.auth());
+    const hotelData = await Hotel.findOne({ owner: req.auth().userId });
+    console.log("Hotel data found for owner:", hotelData);
+
+    if (!hotelData) {
+      console.log("No hotel found for owner:", req.auth().userId);
+      return res.json({
+        success: false,
+        message: "No hotel found for this owner",
+      });
+    }
+
     const rooms = await Room.find({ hotel: hotelData._id.toString() }).populate(
       "hotel"
     );
+    console.log(`Rooms found for hotel ${hotelData._id}:`, rooms);
+
     res.json({ success: true, rooms });
   } catch (err) {
     console.error("Error in getOwnerRoom function:", err);
@@ -70,13 +83,17 @@ export const getOwnerRoom = async (req, res) => {
 // API to toggle availability of a Room
 export const toggleRoomAvailability = async (req, res) => {
   try {
+    console.log("toggleRoomAvailability called. req.body:", req.body);
     const { roomId } = req.body;
     const roomData = await Room.findById(roomId);
+    console.log("Room data found:", roomData);
     if (!roomData) {
+      console.log("Room not found for ID:", roomId);
       return res.json({ success: false, message: "Room not found" });
     }
     roomData.isAvailable = !roomData.isAvailable;
     await roomData.save();
+    console.log("Room availability toggled. New value:", roomData.isAvailable);
     res.json({ success: true, message: "Room availability updated" });
   } catch (err) {
     console.error("Error in toggleRoomAvailability function:", err);
