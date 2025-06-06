@@ -5,10 +5,12 @@ import { toast } from "react-hot-toast";
 
 function ListRoom() {
   const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { axios, user, getToken } = useAppContext();
 
   const fetchRooms = async () => {
     try {
+      setLoading(true);
       console.log("Fetching rooms for user:", user);
       const { data } = await axios.get("/api/rooms/owner", {
         headers: { Authorization: `Bearer ${await getToken()}` },
@@ -24,6 +26,8 @@ function ListRoom() {
     } catch (err) {
       toast.error(err.message);
       console.log("Error in ListRooms.jsx file: ", err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,6 +40,8 @@ function ListRoom() {
     );
     if (data.success) {
       toast.success(data.message);
+      fetchRooms();
+      setAva((prev) => !prev);
     } else {
       toast.error(data.message);
     }
@@ -74,32 +80,46 @@ function ListRoom() {
             </tr>
           </thead>
           <tbody className="text-sm">
-            {rooms.map((item, index) => (
-              <tr key={index}>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
-                  {item.roomType}
-                </td>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300 max-sm:hidden">
-                  {item.amenities.join(", ")}
-                </td>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
-                  ${item.pricePerNight}
-                </td>
-                <td className="py-3 px-4 border-t border-gray-300 text-sm text-red-500 text-center">
-                  <label class="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
-                    <input
-                      type="checkbox"
-                      class="sr-only peer"
-                      checked={item.isAvailable}
-                      onChange={() => toggleAvailability(item._id)}
-                    />
-                    <div class="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200">
-                      <span class="dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
-                    </div>
-                  </label>
+            {loading ? (
+              <tr>
+                <td colSpan={4} className="py-6 text-center text-gray-500">
+                  Loading Rooms...
                 </td>
               </tr>
-            ))}
+            ) : rooms.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="py-6 text-center text-gray-500">
+                  No rooms found
+                </td>
+              </tr>
+            ) : (
+              rooms.map((item, index) => (
+                <tr key={index}>
+                  <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
+                    {item.roomType}
+                  </td>
+                  <td className="py-3 px-4 text-gray-700 border-t border-gray-300 max-sm:hidden">
+                    {item.amenities.join(", ")}
+                  </td>
+                  <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
+                    ${item.pricePerNight}
+                  </td>
+                  <td className="py-3 px-4 border-t border-gray-300 text-sm text-red-500 text-center">
+                    <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={item.isAvailable}
+                        onChange={() => toggleAvailability(item._id)}
+                      />
+                      <div className="relative w-12 h-7 bg-slate-300 rounded-full peer-checked:bg-blue-600 transition-colors duration-200">
+                        <span className="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
+                      </div>
+                    </label>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
