@@ -143,7 +143,7 @@ export const getUserBookings = async (req, res) => {
 
 export const getHotelBooking = async (req, res) => {
   try {
-    const hotel = await Hotel.findOne({ owner: req.auth.userId });
+    const hotel = await Hotel.findOne({ owner: req.auth().userId });
     if (!hotel) {
       return res
         .status(404)
