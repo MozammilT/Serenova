@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
   const [isOwner, setIsOwner] = useState(false);
   const [showHotelReg, setShowHotelReg] = useState(false);
   const [searchedCities, setSearchedCities] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
   const fetchUser = async () => {
     console.group("fetchUser - Debug Info");
@@ -55,11 +56,33 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchRooms = async () => {
+    console.log("fetchRooms - Debug Info");
+    try {
+      const { data } = await axios.get("api/rooms", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+
+      if (data.sucess) {
+        setRooms(data.rooms);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+      console.log("Error in fetchRooms function: ", err);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       fetchUser();
     }
   }, [user]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
 
   useEffect(() => {
     const debugToken = async () => {
@@ -95,6 +118,8 @@ export const AppProvider = ({ children }) => {
     setShowHotelReg,
     searchedCities,
     setSearchedCities,
+    rooms,
+    setRooms,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
