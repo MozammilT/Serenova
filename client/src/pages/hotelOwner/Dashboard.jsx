@@ -1,10 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Title from "../../components/Title";
-import { dashboardDummyData } from "../../constants/assets";
 import { userBookingsDummyData } from "../../constants/assets";
+import { useAppContext } from "../../context/AppContext.jsx";
+import { toast } from "react-hot-toast";
 
 function DashBoard() {
-  const [dashboardData, setDashboardData] = useState();
+  const [dashboardData, setDashboardData] = useState({
+    Bookings: [],
+    totalBookings: 0,
+    totalRevenue: 0,
+  });
+  const { currency, axios, user, getToken } = useAppContext();
+
+  const fetchDashBoardData = async () => {
+    try {
+      const { data } = await axios.get("/api/bookings/hotel", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+      if (data.success) {
+        setDashboardData(data.dashBoardData);
+        toast("Data fetched", {
+          position: "bottom-right",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchDashBoardData();
+    }
+  }, [user]);
 
   return (
     <div>
@@ -25,7 +60,8 @@ function DashBoard() {
           <div className="flex flex-col md:ml-4 font-medium">
             <p className="text-blue-500 text-lg">Total Bookings</p>
             <p className="text-neutral-400 text-base ml-10">
-              ${dashboardDummyData.totalBookings}
+              {currency}
+              {dashboardData.totalBookings}
             </p>
           </div>
         </div>
@@ -40,7 +76,8 @@ function DashBoard() {
           <div className="flex flex-col md:ml-4 font-medium">
             <p className="text-blue-500 text-lg">Total Revenue</p>
             <p className="text-neutral-400 text-base ml-10">
-              ${dashboardDummyData.totalRevenue}
+              {currency}
+              {dashboardData.totalRevenue}
             </p>
           </div>
         </div>
