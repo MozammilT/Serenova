@@ -1,10 +1,13 @@
-import { roomsDummyData } from "../constants/assets";
+// import { roomsDummyData } from "../constants/assets";
 import Hotelcard from "./HotelCard";
 import Title from "./Title";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext.jsx";
 
 function Featuredest() {
-  const navigate = useNavigate();
+  const { rooms, navigate } = useAppContext();
+
+  // const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20">
       <Title
@@ -12,7 +15,7 @@ function Featuredest() {
         subtitle="Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences."
       />
       <div className="flex flex-wrap items-center justify-center gap-6 mt-20">
-        {roomsDummyData.slice(0, 4).map((room, index) => (
+        {rooms.slice(0, 4).map((room, index) => (
           <Hotelcard key={room._id} room={room} index={index} />
         ))}
       </div>
