@@ -3,7 +3,7 @@ import { exclusiveOffers } from "../constants/assets";
 
 function ExclusiveOffers() {
   return (
-    <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 xl:px-32 pt-10` pb-30">
+    <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 xl:px-32 py-20">
       <div className="flex flex-col md:flex-row items-center justify-between w-full">
         <Title
           title="Exclusive Offers"
