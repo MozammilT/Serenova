@@ -10,7 +10,7 @@ function Hero() {
     e.preventDefault();
     navigate(`/rooms?destination=${destination}`);
     await axios.post(
-      "/api/rooms/store-recent-search",
+      "/api/user/store-recent-search",
       { recentSearchCity: destination },
       { headers: { Authorization: `Bearer ${await getToken()}` } }
     );
