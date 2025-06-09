@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { cities } from "../constants/assets";
+import { useAppContext } from "../context/AppContext.jsx";
 
 function Hero() {
+  const { axios, navigate, getToken } = useAppContext();
+  const [destination, setDestination] = useState("");
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    navigate(`/rooms?destination=${destination}`);
+    await axios.post(
+      "/api/rooms/store-recent-search",
+      { recentSearchCity: destination },
+      { headers: { Authorization: `Bearer ${await getToken()}` } }
+    );
+    setDestination((prevValue) => {
+      const updatedSearchCities = [...prevValue, destination];
+      if (updatedSearchCities.length > 3) {
+        updatedSearchCities.shift();
+      }
+      return updatedSearchCities;
+    });
+  };
+
   return (
     <div className="flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url(/heroImage.png)] bg-no-repeat bg-cover bg-center h-screen">
       <p className="bg-[#49B9FF]/50 py-1 px-3.5 rounded-full mt-20">
@@ -14,7 +35,10 @@ function Hero() {
         Unparalleled luxury and comfort await at the world's most exclusive
         hotels and resorts. Start your journey today.
       </p>
-      <form className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-9 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+      <form
+        onSubmit={submitHandler}
+        className="bg-white text-gray-500 rounded-lg px-6 py-4 mt-9 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto"
+      >
         <div>
           <div className="flex items-center gap-2">
             <img src="/calenderIcon.svg" className="h-4" />
@@ -26,6 +50,8 @@ function Hero() {
             type="text"
             className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
             placeholder="Type here"
+            onChange={(e) => setDestination(e.target.value)}
+            value={destination}
             required
           />
           <datalist id="destinations">
