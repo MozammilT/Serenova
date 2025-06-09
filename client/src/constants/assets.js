@@ -73,7 +73,17 @@ import totalRevenueIcon from "/totalRevenueIcon.svg";
 //     totalRevenueIcon,
 // }
 
-export const cities = ["Dubai", "Singapore", "New York", "London"];
+export const cities = [
+  "Goa",
+  "Shimla",
+  "Manali",
+  "Jaipur",
+  "Delhi",
+  "Kolkata",
+  "Lonavala",
+  "Gangtok",
+  "Darjeeling",
+];
 
 // Exclusive Offers Dummy Data
 export const exclusiveOffers = [
