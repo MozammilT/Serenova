@@ -31,10 +31,24 @@ function RoomDetails() {
 
       if (data.success) {
         if (data.isAvailable) {
-          toast.success("Room is available");
+          toast.success("Room is available", {
+            position: "bottom-right",
+            style: {
+              borderRadius: "10px",
+              background: "#333",
+              color: "#fff",
+            },
+          });
           setIsAvailable(true);
         } else {
-          toast.error("Room is not available");
+          toast.error("Room is not available", {
+            position: "bottom-right",
+            style: {
+              borderRadius: "10px",
+              background: "#333",
+              color: "#fff",
+            },
+          });
           setIsAvailable(false);
         }
       } else {
@@ -75,12 +89,6 @@ function RoomDetails() {
       toast.error(err.message);
     }
   };
-
-  useEffect(() => {
-    const roomData = rooms.find((item) => item._id === id);
-    roomData && setRoom(roomData);
-    roomData && setMainImage(roomData.images[0]);
-  }, [room]);
 
   return (
     room && (
@@ -163,7 +171,10 @@ function RoomDetails() {
                 id="checkIn"
                 type="date"
                 min={new Date().toISOString().split("T")[0]}
-                onChange={(e) => setCheckInDate(e.target.value)}
+                onChange={(e) => {
+                  setCheckInDate(e.target.value);
+                  setIsAvailable(false);
+                }}
                 className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none cursor-pointer"
               />
             </div>
@@ -179,7 +190,10 @@ function RoomDetails() {
                 id="checkOut"
                 type="date"
                 min={checkInDate}
-                onChange={(e) => setCheckOutDate(e.target.value)}
+                onChange={(e) => {
+                  setCheckOutDate(e.target.value);
+                  setIsAvailable(false);
+                }}
                 disabled={!checkInDate}
                 className={`rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none ${
                   checkInDate ? "cursor-pointer" : ""
@@ -197,7 +211,10 @@ function RoomDetails() {
                   id="guests"
                   type="number"
                   placeholder="1"
-                  onChange={(e) => setGuests(e.target.value)}
+                  onChange={(e) => {
+                    setGuests(Number(e.target.value));
+                    setIsAvailable(false);
+                  }}
                   className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
                 />
               </div>
@@ -206,7 +223,8 @@ function RoomDetails() {
 
           <button
             type="submit"
-            className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
+            disbaled={!checkInDate || !checkOutDate || !guests}
+            className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
             {isavailable ? "Book Now" : "Check Availability"}
           </button>
