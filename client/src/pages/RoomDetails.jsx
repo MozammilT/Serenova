@@ -1,22 +1,86 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  roomsDummyData,
-  facilityIcons,
-  roomCommonData,
-} from "../constants/assets";
+import { facilityIcons, roomCommonData } from "../constants/assets";
 import Star from "../components/StarRating";
+import { useAppContext } from "../context/AppContext.jsx";
+import { toast } from "react-hot-toast";
 
 function RoomDetails() {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [guests, setGuests] = useState(1);
+  const [isavailable, setIsAvailable] = useState(false);
+  const { rooms, axios, getToken, navigate } = useAppContext();
+
+  const checkAvailability = async () => {
+    try {
+      // Check if the Check In date is greater than Check Out Date
+      if (checkInDate >= checkOutDate) {
+        toast.error("Check Out date should be greater than Check In Date");
+        return;
+      }
+
+      const { data } = await axios.post("/api/bookings/check-availability", {
+        room: id,
+        checkInDate,
+        checkOutDate,
+      });
+
+      if (data.success) {
+        if (data.isAvailable) {
+          toast.success("Room is available");
+          setIsAvailable(true);
+        } else {
+          toast.error("Room is not available");
+          setIsAvailable(false);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  //onSubmitHandler function to check the Availability and book the room
+  const submitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      if (!isavailable) {
+        return checkAvailability();
+      } else {
+        const { data } = await axios.post(
+          "/api/bookings/book",
+          {
+            room: id,
+            checkInDate,
+            checkOutDate,
+            guests,
+            paymentMethod: "Pay at hotel",
+          },
+          { headers: { Authorization: `Bearer ${await getToken()}` } }
+        );
+        if (data.success) {
+          toast.success(data.message);
+          navigate("my-bookings");
+          scrollTo(0, 0);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   useEffect(() => {
-    const roomId = roomsDummyData.find((room) => room._id === id);
-    roomId && setRoom(roomId);
-    roomId && setMainImage(roomId.images[0]);
-  }, []);
+    const roomData = rooms.find((item) => item._id === id);
+    roomData && setRoom(roomData);
+    roomData && setMainImage(roomData.images[0]);
+  }, [room]);
 
   return (
     room && (
@@ -43,19 +107,19 @@ function RoomDetails() {
             <img
               src={mainImage}
               alt="room-image"
-              className="w-full rounded-xl shadow-lg object-cover"
+              className="w-full h-105 overflow-hidden rounded-xl shadow-lg object-cover"
             />
           </div>
           <div className="grid grid-cols-2 gap-4 lg:w-1/2 w-full">
-            {room?.images.length > 1 &&
+            {room.images.length > 1 &&
               room.images.map((image, index) => (
                 <img
                   onClick={() => setMainImage(image)}
                   key={index}
                   src={image}
                   alt="room-image"
-                  className={`w-full rounded-xl shadow-md object-contain cursor-pointer ${
-                    mainImage == image && "outline-3 outline-orange-500"
+                  className={`w-full h-50 overflow-hidden rounded-xl shadow-lg object-cover cursor-pointer ${
+                    mainImage == image && "outline-4 outline-orange-500"
                   }`}
                 />
               ))}
@@ -84,18 +148,23 @@ function RoomDetails() {
           </div>
           <p className="text-2xl font-medium">{`$${room.pricePerNight}/night`}</p>
         </div>
-        <form className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
+        <form
+          onSubmit={submitHandler}
+          className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl"
+        >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-15">
             <div className="text-gray-500 gap-4 md:gap-10">
               <div className="flex items-center gap-2">
                 <img src="/calenderIcon.svg" className="h-4" />
-                <label htmlFor="checkIn">Check in</label>
+                <label htmlFor="checkIn">Check In</label>
               </div>
               <input
+                required
                 id="checkIn"
                 type="date"
-                className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
-                required
+                min={new Date().toISOString().split("T")[0]}
+                onChange={(e) => setCheckInDate(e.target.value)}
+                className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none cursor-pointer"
               />
             </div>
             <div className="w-px h-20 bg-gray-300/70 max-md:hidden"></div>
@@ -103,13 +172,18 @@ function RoomDetails() {
             <div className="text-gray-500 gap-4 md:gap-10">
               <div className="flex items-center gap-2">
                 <img src="/calenderIcon.svg" className="h-4" />
-                <label htmlFor="checkOut">Check in</label>
+                <label htmlFor="checkOut">Check Out</label>
               </div>
               <input
+                required
                 id="checkOut"
                 type="date"
-                className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none"
-                required
+                min={checkInDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
+                disabled={!checkInDate}
+                className={`rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none ${
+                  checkInDate ? "cursor-pointer" : ""
+                }`}
               />
             </div>
             <div className="w-px h-20 bg-gray-300/70 max-md:hidden"></div>
@@ -117,13 +191,14 @@ function RoomDetails() {
               <div className="flex items-center gap-2 md:flex-col">
                 <label htmlFor="guests">Guests</label>
                 <input
+                  required
                   min={1}
                   max={4}
                   id="guests"
                   type="number"
+                  placeholder="1"
+                  onChange={(e) => setGuests(e.target.value)}
                   className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
-                  placeholder="0"
-                  required
                 />
               </div>
             </div>
@@ -133,7 +208,7 @@ function RoomDetails() {
             type="submit"
             className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
-            Check Availibility
+            {isavailable ? "Book Now" : "Check Availability"}
           </button>
         </form>
         <div className="mt-20 space-y-4">
