@@ -229,10 +229,10 @@ function RoomDetails() {
 
           <button
             type="submit"
-            disbaled={!checkInDate || !checkOutDate || !guests}
+            disabled={!checkInDate || !checkOutDate || !guests}
             className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
-            {isavailable ? "Book Now" : "Check Availability"}
+            {isavailable ? "Book Now" : "Check Availability"} 
           </button>
         </form>
         <div className="mt-20 space-y-4">
