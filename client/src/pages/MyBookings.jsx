@@ -1,9 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Title from "../components/Title";
 import { userBookingsDummyData } from "../constants/assets";
+import { toast } from "react-hot-toast";
+import { useAppContext } from "../context/AppContext.jsx";
 
 function MyBookings() {
-  const [bookings, setBookings] = useState(userBookingsDummyData);
+  const [bookings, setBookings] = useState([]);
+  const { axios, getToken, user } = useAppContext();
+
+  const fetchBookings = async () => {
+    try {
+      const { data } = await axios.get("/api/bookings/user", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+
+      if (data.success) {
+        setBookings(data.bookings);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchBookings();
+    }
+  }, [user]);
 
   return (
     <div className="py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px24 xl:px-32">
@@ -20,7 +45,7 @@ function MyBookings() {
           <div className="w-1/3">Payment</div>
         </div>
 
-        {userBookingsDummyData.map((booking) => (
+        {bookings.map((booking) => (
           <div
             key={booking._id}
             className="grid grid-col-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t"
