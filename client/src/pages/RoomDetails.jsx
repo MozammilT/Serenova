@@ -90,6 +90,12 @@ function RoomDetails() {
     }
   };
 
+  useEffect(() => {
+    const roomData = rooms.find((item) => item._id === id);
+    roomData && setRoom(roomData);
+    roomData && setMainImage(roomData.images[0]);
+  }, [room]);
+
   return (
     room && (
       <main className="py-28 md:py-35 px-4 md:px-16 lg:px-24 xl:px-32">
