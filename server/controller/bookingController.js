@@ -1,6 +1,7 @@
 import Booking from "../models/bookings.js";
 import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
+import { bookingConfirmation } from "./emailController.js";
 
 //Function to Check the Availability of room (with Database)
 const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
@@ -45,7 +46,10 @@ export const checkAvailabilityAPI = async (req, res) => {
     res.status(200).json({ success: true, isAvailable });
   } catch (err) {
     console.log("Error in checkAvailabilityAPI function: ", err);
-    res.status(500).json({ success: false, message: "Failed to check the availability of room" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to check the availability of room",
+    });
   }
 };
 
@@ -98,6 +102,7 @@ export const createBooking = async (req, res) => {
     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
     console.log("nights: ", nights);
     const totalPrice = pricePerNight * nights;
+    console.log("Total Price: ", totalPrice);
 
     const booking = await Booking.create({
       user,
@@ -112,6 +117,25 @@ export const createBooking = async (req, res) => {
     res
       .status(201)
       .json({ success: true, message: "Booking created successfully" });
+
+    // Send booking confirmation email
+    try {
+      await bookingConfirmation({
+        email: req.user.email,
+        user: req.user,
+        bookingDetails: {
+          hotelName: roomData.hotel.name,
+          roomType: roomData.roomType,
+          checkInDate: new Date(checkInDate),
+          checkOutDate: new Date(checkOutDate),
+          guests,
+          totalPrice,
+        },
+      });
+      console.log("Confirmation email sent to: ", req.user.email);
+    } catch (emailErr) {
+      console.error("Failed to send booking confirmation email:", emailErr);
+    }
   } catch (err) {
     console.error("Error in createbookign function: ", err);
     res
@@ -134,7 +158,9 @@ export const getUserBookings = async (req, res) => {
     res.status(200).json({ success: true, bookings });
   } catch (err) {
     console.error("Error in getUserBookings function: ", err);
-    res.status(500).json({ succes: false, message: "Failed to get the user bookings" });
+    res
+      .status(500)
+      .json({ succes: false, message: "Failed to get the user bookings" });
   }
 };
 
@@ -176,6 +202,8 @@ export const getHotelBooking = async (req, res) => {
     });
   } catch (err) {
     console.error("Error in getHotelBooking function: ", err);
-    res.status(500).json({ success: false, message: "Failed to fetch bookings" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch bookings" });
   }
 };
