@@ -13,6 +13,7 @@ function RoomDetails() {
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [guests, setGuests] = useState(1);
   const [isavailable, setIsAvailable] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { rooms, axios, getToken, navigate } = useAppContext();
 
   const checkAvailability = async () => {
@@ -59,10 +60,11 @@ function RoomDetails() {
     }
   };
 
-  //onSubmitHandler function to check the Availability and book the room
+  //onSubmitHandler function to create a booking
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
+      setLoading(true);
       if (!isavailable) {
         return checkAvailability();
       } else {
@@ -87,6 +89,8 @@ function RoomDetails() {
       }
     } catch (err) {
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -229,10 +233,17 @@ function RoomDetails() {
 
           <button
             type="submit"
-            disabled={!checkInDate || !checkOutDate || !guests}
+            disabled={!checkInDate || !checkOutDate || !guests || loading}
             className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
-            {isavailable ? "Book Now" : "Check Availability"} 
+            {/* {isavailable ? "Book Now" : "Check Availability"} */}
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            ) : isavailable ? (
+              "Book Now"
+            ) : (
+              "Check Availability"
+            )}
           </button>
         </form>
         <div className="mt-20 space-y-4">
