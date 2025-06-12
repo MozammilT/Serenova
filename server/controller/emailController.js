@@ -29,10 +29,10 @@ export const sendWelcomeEmail = (req, res) => {
     if (err) {
       res
         .status(500)
-        .json({ succcess: false, message: "Failed to send the email." });
+        .json({ success: false, message: "Failed to send the email." });
       console.error("Error sending welcome email:", err);
     } else {
-      res.status(200).json({ success: true, mmessage: "Email sent" });
+      res.status(200).json({ success: true, message: "Email sent" });
       console.log(`Welcome email sent to ${email}:`, info.response);
     }
   });
