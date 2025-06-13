@@ -234,11 +234,12 @@ function RoomDetails() {
           <button
             type="submit"
             disabled={!checkInDate || !checkOutDate || !guests || loading}
-            className="bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
+            className={`bg-black active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base ${
+              loading ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
           >
-            {/* {isavailable ? "Book Now" : "Check Availability"} */}
             {loading ? (
-              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span className="w-5 h-5 border-[3px] border-white border-b-transparent border-l-transparent rounded-full animate-spin inline-block"></span>
             ) : isavailable ? (
               "Book Now"
             ) : (
