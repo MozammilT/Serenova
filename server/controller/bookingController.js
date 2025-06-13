@@ -2,6 +2,7 @@ import Booking from "../models/bookings.js";
 import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
 import { bookingConfirmation } from "./emailController.js";
+import mongoose from "mongoose";
 
 //Function to Check the Availability of room (with Database)
 const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
@@ -205,5 +206,59 @@ export const getHotelBooking = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch bookings" });
+  }
+};
+
+//API to delete a booking
+//? Route - delete => /api/bookings/delete
+
+export const deleteBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+
+    // Check if bookingId is provided
+    if (!bookingId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Booking ID is required" });
+    }
+
+    // Validate if bookingId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid booking ID format" });
+    }
+
+    // Check if the booking exists
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    // Update the booking status to cancelled
+    const result = await Booking.updateOne(
+      { _id: bookingId },
+      { $set: { status: "Cancelled" } }
+    );
+
+    // Check if the update was successful
+    if (result.modifiedCount === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Failed to cancel the booking" });
+    }
+
+    console.log("[deleteBooking] Cancelled booking: ", bookingId);
+    res
+      .status(200)
+      .json({ success: true, message: "Booking cancelled successfully" });
+  } catch (err) {
+    console.error("Error in deleteBooking function: ", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to cancel the booking" });
   }
 };
