@@ -17,16 +17,37 @@ const clerkWebhook = async (req, res) => {
     const userData = {
       _id: data.id,
       email: data.email_addresses[0].email_address,
-      username: data.first_name + " " + data.last_name,
+      username: data.username,
       image: data.image_url,
     };
 
     switch (type) {
+      // case "user.created": {
+      //   await User.create(userData);
+      //   console.log("✅ User created:", userData);
+      //   break;
+      // }
+
       case "user.created": {
-        await User.create(userData);
-        console.log("✅ User created:", userData);
-        break;
+        try {
+          const existingUser = await User.findById(userData.username);
+          if (existingUser) {
+            console.log("❌ Username should be unique: ", userData.username);
+            res
+              .status(409)
+              .json({ success: true, message: "Username already exists" });
+            return;
+          }
+
+          await User.create(userData);
+          console.log("✅ User created:", userData);
+          break;
+        } catch (err) {
+          console.error("❌ Error creating user:", err);
+          throw err;
+        }
       }
+
       case "user.updated": {
         await User.findByIdAndUpdate(userData._id, userData);
         console.log("✅ User updated:", userData);
