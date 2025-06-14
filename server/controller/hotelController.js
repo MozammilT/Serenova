@@ -3,7 +3,7 @@ import User from "../models/user.js";
 
 export const registerHotel = async (req, res) => {
   try {
-    const { name, address, contact, city } = req.body;
+    const { name, address, contact, city, hotelBrand } = req.body;
     const owner = req.user._id;
 
     console.log("Incoming hotel registration from user: ", owner);
@@ -14,7 +14,7 @@ export const registerHotel = async (req, res) => {
       return res.json({ success: false, message: "hotel already registered" });
     }
 
-    await Hotel.create({ name, address, contact, city, owner });
+    await Hotel.create({ name, address, contact, city, owner, hotelBrand });
     const userUpdateResult = await User.updateOne(
       { _id: owner },
       { $set: { role: "hotelOwner" } }
