@@ -138,7 +138,7 @@ function Navbar() {
           </UserButton>
         ) : (
           <button
-            className="bg-black text-white px-8 py-2.5 rounded-full ml-4 transition-all duration-500"
+            className="bg-black text-white px-8 py-2.5 rounded-full ml-4 transition-all duration-500 cursor-pointer"
             onClick={openSignIn}
           >
             Login
@@ -202,7 +202,7 @@ function Navbar() {
 
         {!user && (
           <button
-            className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500"
+            className="bg-black text-white px-8 py-2.5 rounded-full transition-all duration-500 cursor-pointer"
             onClick={openSignIn}
           >
             Login
