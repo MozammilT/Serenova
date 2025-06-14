@@ -283,7 +283,7 @@ function RoomDetails() {
             />
             <div>
               <p className="text-lg md:text-xl">
-                Hosted By {room.hotel.owner.username}
+                Hosted By {room.hotel.hotelBrand}
               </p>
               <div className="flex items-center mt-1">
                 <Star rating={room.hotel.owner.rating} />
