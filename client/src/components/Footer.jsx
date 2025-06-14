@@ -1,4 +1,47 @@
+import { toast } from "react-hot-toast";
+import { useState } from "react";
+
 function Footer() {
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "3f1754c4-75bd-47bf-b525-bb23beeea030");
+
+    const submisson = async () => {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        event.target.reset();
+        return data;
+      } else {
+        console.log("Error", data);
+      }
+    };
+
+    toast.promise(
+      submisson,
+      {
+        loading: "Sending...",
+        success: "Form Submitted Successfully",
+        error: (err) => `Submittion failed: ${err.message}`,
+      },
+      {
+        position: "bottom-right",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      }
+    );
+  };
+
   return (
     <div className="text-gray-500/80 pt-8 px-6 md:px-16 lg:px-24 xl:px-32">
       <div className="flex flex-wrap justify-between gap-12 md:gap-6">
@@ -76,19 +119,23 @@ function Footer() {
           <p className="mt-3 text-sm">
             Got ideas? Tell us what you'd love to see next on Serenova.
           </p>
-          <div className="flex items-center mt-4">
-            <input
-              type="text"
-              className="bg-slate-100/20 rounded-l border border-gray-300 h-9 px-3 outline-none text-gray-500"
-              placeholder="Share your thoughts..."
-            />
-            <button className=" group flex items-center justify-center bg-black h-9 w-10 aspect-square rounded-r">
-              <img
-                src="/arrowIcon.svg"
-                alt="arrow-icon"
-                className="group-hover:translate-x-1 transition-all invert"
+          <div>
+            <form className="flex items-center mt-4" onSubmit={onSubmit}>
+              <input
+                required
+                name="message"
+                type="text"
+                className="bg-slate-100/20 rounded-l border border-gray-300 h-9 px-3 outline-none text-gray-500"
+                placeholder="Share your thoughts..."
               />
-            </button>
+              <button className=" group flex items-center justify-center bg-black h-9 w-10 aspect-square rounded-r">
+                <img
+                  src="/arrowIcon.svg"
+                  alt="arrow-icon"
+                  className="group-hover:translate-x-1 transition-all invert"
+                />
+              </button>
+            </form>
           </div>
         </div>
       </div>
