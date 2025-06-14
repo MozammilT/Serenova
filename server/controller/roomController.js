@@ -42,7 +42,7 @@ export const getRooms = async (req, res) => {
         path: "hotel",
         populate: {
           path: "owner",
-          select: "image",
+          select: "username rating image",
         },
       })
       .sort({ createdAt: -1 });
