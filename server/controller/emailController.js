@@ -38,18 +38,27 @@ export const sendWelcomeEmail = (req, res) => {
   });
 };
 
-export const bookingConfirmation = async ({ email, user, bookingDetails }) => {
+export const bookingConfirmation = async ({
+  email,
+  username,
+  bookingDetails,
+}) => {
   if (!email) {
     throw new Error("No email provided");
   }
+  if (!username) {
+    throw new Error("NO username provided");
+  }
+  const formattedUsername =
+    username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
   const mailOptions = {
     from: `"Team Serenova" <${process.env.EMAIL}>`,
     to: email,
     subject: "Booking Confirmation - Serenova",
     html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto">
-            <h2 style="color: #4caf50">Booking Confirmed!</h2>
-            <p>Dear ${user?.email?.split("@")[0] || "Guest"},</p>
+            <h2 style="color: #6bbefa">Booking Confirmed!</h2>
+            <p>Dear ${formattedUsername || "Guest"},</p>
             <p>
               Thank you for booking with <b>Serenova</b>. Your reservation is
               confirmed. Here are your booking details:
@@ -95,7 +104,7 @@ export const bookingConfirmation = async ({ email, user, bookingDetails }) => {
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd">Total Price</td>
-                <td style="padding: 8px; border: 1px solid #ddd">${
+                <td style="padding: 8px; border: 1px solid #ddd">${process.env.CURRENCY}${
                   bookingDetails?.totalPrice || "Not Provided"
                 }</td>
               </tr>
