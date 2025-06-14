@@ -7,6 +7,7 @@ function HotelRegistration() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
+  const [hotelBrand, setHotelBrand] = useState("");
   const [city, setCity] = useState("");
   const { setShowHotelReg, axios, getToken, setIsOwner } = useAppContext();
 
@@ -15,7 +16,7 @@ function HotelRegistration() {
       e.preventDefault();
       const { data } = await axios.post(
         "/api/hotels",
-        { name, address, contact, city },
+        { name, address, contact, city, hotelBrand },
         { headers: { Authorization: `Bearer ${await getToken()}` } }
       );
 
@@ -45,7 +46,7 @@ function HotelRegistration() {
           alt="hotel-registration-image"
           className="w-1/2 rounded-l-xl hidden md:block"
         />
-        <div className="relative flex flex-col items-center md:w-1/2 p-8 md:p-10">
+        <div className="relative flex flex-col items-center md:w-1/2 p-8 md:pt-5 md:pr-10 md:pl-10 md:pb-1.5">
           <img
             src="closeIcon.svg"
             alt="close-icon"
@@ -97,6 +98,22 @@ function HotelRegistration() {
               required
               type="text"
               placeholder="Enter Your Address"
+              className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
+            />
+          </div>
+
+          {/* Hotel Brand */}
+          <div className="w-full mt-6">
+            <label htmlFor="hotelBrand" className="font-medium text-gray-500">
+              Hotel Brand
+            </label>
+            <input
+              onChange={(e) => setHotelBrand(e.target.value)}
+              value={hotelBrand}
+              id="hotelBrand"
+              required
+              type="text"
+              placeholder="Hotel brand/chain"
               className=" border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-gray-800 font-light"
             />
           </div>
