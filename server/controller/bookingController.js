@@ -123,7 +123,7 @@ export const createBooking = async (req, res) => {
     try {
       await bookingConfirmation({
         email: req.user.email,
-        user: req.user,
+        username: req.user.username,
         bookingDetails: {
           hotelName: roomData.hotel.name,
           roomType: roomData.roomType,
