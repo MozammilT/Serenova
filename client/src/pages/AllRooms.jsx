@@ -168,6 +168,7 @@ function AllRooms() {
                   }}
                 >
                   {room.hotel.name}
+                  <span className="font-inner text-base ml-2">{`(${room.roomType})`}</span>
                 </p>
                 <div className="flex items-center">
                   <Star rating={room.hotel.rating} />
