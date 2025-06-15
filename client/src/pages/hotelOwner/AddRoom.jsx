@@ -103,6 +103,9 @@ function AddRoom() {
             "Room Service": false,
             "Mountain View": false,
             "Pool Access": false,
+            "Bar Access": false,
+            "Free Parking": false,
+            "Restaurant": false,
           },
         });
         setImages({
