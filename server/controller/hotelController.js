@@ -1,5 +1,6 @@
 import Hotel from "../models/hotel.js";
 import User from "../models/user.js";
+import Room from "../models/room.js";
 
 export const registerHotel = async (req, res) => {
   try {
@@ -24,5 +25,59 @@ export const registerHotel = async (req, res) => {
   } catch (err) {
     console.log("error registering hotel: ", err);
     res.json({ success: false, message: err.message });
+  }
+};
+
+export const getAllHotel = async (req, res) => {
+  try {
+    const cheapestRoom = await Room.aggregate([
+      {
+        $sort: {
+          hotel: 1,
+          pricePerNight: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$hotel",
+          cheapestRoom: {
+            $first: "$$ROOT",
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$cheapestRoom",
+        },
+      },
+      {
+        $addFields: {
+          hotel: {
+            $toObjectId: "$hotel",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "hotels",
+          localField: "hotel",
+          foreignField: "_id",
+          as: "hotelDetails",
+        },
+      },
+      {
+        $unwind: "$hotelDetails",
+      },
+    ]);
+    if (cheapestRoom.length === 0) {
+      return res
+        .status(502)
+        .json({ success: false, message: "No hotel found" });
+    } else {
+      res.status(200).json({ success: true, cheapestRoom });
+    }
+  } catch (err) {
+    console.log("Error in getAlllHotel function: ", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
