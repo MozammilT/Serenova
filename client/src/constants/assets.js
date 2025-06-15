@@ -16,6 +16,9 @@ import roomServiceIcon from "/roomServiceIcon.svg";
 import mountainIcon from "/mountainIcon.svg";
 import poolIcon from "/poolIcon.svg";
 import homeIcon from "/homeIcon.svg";
+import barIcon from "/barIcon.svg";
+import restaurantIcon from "/restaurantIcon.svg";
+import freeParkingIcon from "/freeParkingIcon.svg";
 import closeIcon from "/closeIcon.svg";
 import locationFilledIcon from "/locationFilledIcon.svg";
 import heartIcon from "/heartIcon.svg";
@@ -155,6 +158,9 @@ export const facilityIcons = {
   "Room Service": roomServiceIcon,
   "Mountain View": mountainIcon,
   "Pool Access": poolIcon,
+  "Bar Access": barIcon,
+  "Free Parking": freeParkingIcon,
+  "Restaurant": restaurantIcon,
 };
 
 // For Room Details Page
