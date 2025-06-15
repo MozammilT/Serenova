@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Hotelcard from "./HotelCard";
+import RoomCard from "./RoomCard";
 import Title from "./Title";
 import { useAppContext } from "../context/AppContext.jsx";
 
@@ -27,7 +27,7 @@ function RecommendedHotel() {
         />
         <div className="flex flex-wrap items-center justify-center gap-6 mt-20">
           {recommended.slice(0, 4).map((room, index) => (
-            <Hotelcard key={room._id} room={room} index={index} />
+            <RoomCard key={room._id} room={room} index={index} />
           ))}
         </div>
       </div>
