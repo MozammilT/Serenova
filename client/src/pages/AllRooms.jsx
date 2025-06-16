@@ -219,7 +219,9 @@ function AllRooms() {
             >
               {openFilter ? "HIDE" : "SHOW"}
             </span>
-            <span className="hidden lg:block">CLEAR</span>
+            <span className="hidden lg:block" onClick={clearFilters}>
+              CLEAR
+            </span>
           </div>
         </div>
         <div
