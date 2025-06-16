@@ -707,7 +707,7 @@ export const bookingConfirmation = async ({
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd">Total Price</td>
                 <td style="padding: 8px; border: 1px solid #ddd">${
-                  process.env.CURRENCY
+                  process.env.CURRENCY || "$"
                 }${bookingDetails?.totalPrice || "Not Provided"}</td>
               </tr>
             </table>
