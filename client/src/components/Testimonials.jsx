@@ -5,7 +5,7 @@ import Star from "./StarRating";
 function Testimonials() {
  
   return (
-    <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 pt-15 pb-30">
+    <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 pt-15 pb-30">
       <Title
         title="What Our Guests Say"
         subtitle="Discover why discerning travelers consistently choose QuickStay for their exclusive and luxurious accommodations around the world."

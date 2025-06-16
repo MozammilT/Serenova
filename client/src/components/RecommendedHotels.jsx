@@ -20,7 +20,7 @@ function RecommendedHotel() {
 
   return (
     recommended.length > 0 && (
-      <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 pt-20">
+      <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 pt-20">
         <Title
           title="Recommended Hotels"
           subtitle="Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences."

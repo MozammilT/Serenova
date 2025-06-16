@@ -8,7 +8,7 @@ export const sendWelcomeEmail = (req, res) => {
       .json({ success: false, message: "No email provided" });
   }
   const mailOptions = {
-    from: `\"Serenova News Letts\" <${process.env.EMAIL}>`,
+    from: `\"Serenova News Letters\" <${process.env.EMAIL}>`,
     to: email,
     subject: "Welcome to Serenova",
     html: `

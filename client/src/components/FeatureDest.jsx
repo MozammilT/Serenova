@@ -11,7 +11,7 @@ function Featuredest() {
 
   return (
     hotels.length > 0 && (
-      <div className="flex flex-col items-center px-6 md:px-16 lg:px-20 bg-slate-50 pt-20">
+      <div className="flex flex-col items-center px-6 md:px-16 lg:px-20 pt-20">
         <Title
           title="Featured Destinations"
           subtitle="Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences."
