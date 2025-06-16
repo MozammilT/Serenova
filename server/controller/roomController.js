@@ -53,7 +53,7 @@ export const getRooms = async (req, res) => {
   }
 };
 
-// API to get all Room for a specific Hotel
+// API to get all Room of a owner
 export const getOwnerRoom = async (req, res) => {
   try {
     console.log("getOwnerRoom called. req.auth():", req.auth());
@@ -98,5 +98,35 @@ export const toggleRoomAvailability = async (req, res) => {
   } catch (err) {
     console.error("Error in toggleRoomAvailability function:", err);
     res.json({ success: false, message: err.message });
+  }
+};
+
+//API to fetch all room of a Hotel
+
+export const fetchHotelRooms = async (req, res) => {
+  const hotelId = req.query.hotelId;
+  if (!hotelId) {
+    console.log("[fetchHotelRooms] No hotel ID found");
+    return res
+      .status(500)
+      .json({ success: false, message: "No hotel ID found" });
+  }
+  try {
+    const hotelRooms = await Room.find({ hotel: hotelId }).populate("hotel");
+    if (hotelRooms.length === 0) {
+      res.status(404).json({
+        success: true,
+        message: "No rooms found for hotel: ",
+        hotelId,
+      });
+    } else {
+      res.status(200).json({ success: true, hotelRooms });
+      console.log("[fetchHotelRooms] Room found for hotel: ", hotelRooms);
+    }
+  } catch (err) {
+    console.log("Error in hotelRooms function: ", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error in hotelRooms function" });
   }
 };

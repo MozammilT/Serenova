@@ -6,12 +6,14 @@ import {
   getRooms,
   getOwnerRoom,
   toggleRoomAvailability,
+  fetchHotelRooms,
 } from "../controller/roomController.js";
 
 const roomRouter = express.Router();
 
 roomRouter.post("/", upload.array("images", 4), protect, createRoom);
 roomRouter.get("/", getRooms);
+roomRouter.get("/hotel", fetchHotelRooms);
 roomRouter.get("/owner", protect, getOwnerRoom);
 roomRouter.post("/toggle-availibility", protect, toggleRoomAvailability);
 
