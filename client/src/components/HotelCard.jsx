@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Hotelcard({ room, index }) {
   return (
     <Link
-      to={"/rooms/" + room._id}
+      to={"/hotel/" + room.hotel}
       onClick={() => scrollTo(0, 0)}
       key={room._id}
       className="relative w-[315px] rounded-xl overflow-hidden bg-grey-100 text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.05)]"
