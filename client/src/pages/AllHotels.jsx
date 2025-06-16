@@ -42,7 +42,6 @@ function AllHotels() {
   });
   const [selectedSort, setSelectedSort] = useState("");
 
-  const roomTypes = ["Single Bed", "Double Bed", "Luxury Room", "Family Suite"];
   const priceRange = [
     "0 to 500",
     "500 to 1000",
@@ -52,86 +51,77 @@ function AllHotels() {
   const sortBy = ["Price Low to High", "Price High to Low", "Newest First"];
 
   //Function to handle the filter change
-  //   function handleFilterChange(checked, value, type) {
-  //     setSelectedFilters((prevValue) => {
-  //       const updatedFilters = { ...prevValue };
-  //       if (checked) {
-  //         updatedFilters[type].push(value);
-  //       } else {
-  //         updatedFilters[type] = updatedFilters[type].filter(
-  //           (item) => item !== value
-  //         );
-  //       }
-  //       return updatedFilters;
-  //     });
-  //   }
+  function handleFilterChange(checked, value, type) {
+    setSelectedFilters((prevValue) => {
+      const updatedFilters = { ...prevValue };
+      if (checked) {
+        updatedFilters[type].push(value);
+      } else {
+        updatedFilters[type] = updatedFilters[type].filter(
+          (item) => item !== value
+        );
+      }
+      return updatedFilters;
+    });
+  }
 
   //Function to handle to handle the sort change
-  //   function handleSortChange(sortOption) {
-  //     setSelectedSort(sortOption);
-  //   }
-
-  //Function to check if a rokm matches the selected room types
-  //   function matchedRoomType(room) {
-  //     return (
-  //       selectedFilters.roomType.length === 0 ||
-  //       selectedFilters.roomType.includes(room.roomType)
-  //     );
-  //   }
+  function handleSortChange(sortOption) {
+    setSelectedSort(sortOption);
+  }
 
   //Function to check if the room matches the selected price range
-  //   function matchedPriceRange(room) {
-  //     return (
-  //       selectedFilters.priceRange.length === 0 ||
-  //       selectedFilters.priceRange.some((range) => {
-  //         const [min, max] = range.split(" to ").map(Number);
-  //         return room.pricePerNight >= min && room.pricePerNight <= max;
-  //       })
-  //     );
-  //   }
+  function matchedPriceRange(room) {
+    return (
+      selectedFilters.priceRange.length === 0 ||
+      selectedFilters.priceRange.some((range) => {
+        const [min, max] = range.split(" to ").map(Number);
+        return room.pricePerNight >= min && room.pricePerNight <= max;
+      })
+    );
+  }
 
   //Function to sort room based on the selected sort options
-  //   function sortRooms(a, b) {
-  //     if (selectedSort === "Price Low to High") {
-  //       return a.pricePerNight - b.pricePerNight;
-  //     }
-  //     if (selectedSort === "Price High to Low") {
-  //       return b.pricePerNight - a.pricePerNight;
-  //     }
-  //     if (selectedSort === "Newest First") {
-  //       return new Date(b.createdAt) - new Date(a.createdAt);
-  //     }
-  //     return 0;
-  //   }
+  function sortRooms(a, b) {
+    if (selectedSort === "Price Low to High") {
+      return a.pricePerNight - b.pricePerNight;
+    }
+    if (selectedSort === "Price High to Low") {
+      return b.pricePerNight - a.pricePerNight;
+    }
+    if (selectedSort === "Newest First") {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    return 0;
+  }
 
   //Function to filter Destination
-  //   function filterDestination(room) {
-  //     const destination = searchParams.get("destination");
-  //     if (!destination) return true;
-  //     return room.hotel.city.toLowerCase().includes(destination.toLowerCase());
-  //   }
+  function filterDestination(room) {
+    const destination = searchParams.get("destination");
+    if (!destination) return true;
+    return room.hotel.city.toLowerCase().includes(destination.toLowerCase());
+  }
 
   //Function to filter and sort room based on selected filters and sort options
-  //   const filteredRooms = useMemo(() => {
-  //     return rooms
-  //       .filter(
-  //         (room) =>
-  //           matchedRoomType(room) &&
-  //           matchedPriceRange(room) &&
-  //           filterDestination(room)
-  //       )
-  //       .sort(sortRooms);
-  //   }, [rooms, selectedFilters, selectedSort, searchParams]);
+  const filteredRooms = useMemo(() => {
+    return hotels
+      .filter(
+        (room) =>
+          //   matchedRoomType(room) &&
+          matchedPriceRange(room) && filterDestination(room)
+      )
+      .sort(sortRooms);
+  }, [hotels, selectedFilters, selectedSort, searchParams]);
 
   //Function to clear all filters
-  //   function clearFilters() {
-  //     setSelectedFilters({
-  //       roomType: [],
-  //       priceRange: [],
-  //     });
-  //     setSelectedSort("");
-  //     setSearchParams({});
-  //   }
+  function clearFilters() {
+    setSelectedFilters({
+      roomType: [],
+      priceRange: [],
+    });
+    setSelectedSort("");
+    setSearchParams({});
+  }
 
   return (
     <div className="flex flex-col-reverse lg:flex-row items-start justify-between pt-28 md:pt-35 px-4 md:px-16 lg:px-24 xl:px-32">
@@ -141,7 +131,7 @@ function AllHotels() {
           subtitle="Take advantage of our limited-time offers and special packages to enhance your stay and create unforgettable memories."
           align="left"
         />
-        {hotels.map((room) => {
+        {filteredRooms.map((room) => {
           return (
             <div
               key={room._id}
@@ -169,7 +159,6 @@ function AllHotels() {
                   }}
                 >
                   {room.hotelDetails.name}
-                  <span className="font-inner text-base ml-2">{`(${room.roomType})`}</span>
                 </p>
                 <div className="flex items-center">
                   <Star rating={room.hotel.rating} />
@@ -221,7 +210,9 @@ function AllHotels() {
             >
               {openFilter ? "HIDE" : "SHOW"}
             </span>
-            <span className="hidden lg:block">CLEAR</span>
+            <span className="hidden lg:block" onClick={clearFilters}>
+              CLEAR
+            </span>
           </div>
         </div>
         <div
@@ -229,19 +220,6 @@ function AllHotels() {
             openFilter ? "h-auto" : "h-0 lg:h-auto"
           } overflow-hidden transition-all duration-700`}
         >
-          <div className="px-5 pt-5">
-            <p className="font-medium text-gray-800 pb-2">Popular Filters</p>
-            {roomTypes.map((room, index) => (
-              <CheckBox
-                label={room}
-                key={index}
-                selected={selectedFilters.roomType.includes(room)}
-                onChange={(checked) =>
-                  handleFilterChange(checked, room, "roomType")
-                }
-              />
-            ))}
-          </div>
           <div className="px-5 pt-5">
             <p className="font-medium text-gray-800 pb-2">Price Range</p>
             {priceRange.map((range, index) => (
