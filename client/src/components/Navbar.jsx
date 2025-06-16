@@ -13,8 +13,8 @@ import { useAppContext } from "../context/AppContext.jsx";
 function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Hotels", path: "/rooms" },
-    { name: "Experience", path: "/" },
+    { name: "Hotels", path: "/hotels" },
+    { name: "Rooms", path: "/rooms" },
     { name: "About", path: "/" },
   ];
 
