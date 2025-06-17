@@ -640,7 +640,7 @@ export const sendWelcomeEmail = (req, res) => {
   });
 };
 
-export const bookingConfirmation = async ({
+export const cancelConfirmation = async ({
   email,
   username,
   bookingDetails,
@@ -656,14 +656,15 @@ export const bookingConfirmation = async ({
   const mailOptions = {
     from: `"Team Serenova" <${process.env.EMAIL}>`,
     to: email,
-    subject: "Booking Confirmation - Serenova",
+    subject: "Cancelling Confirmation - Serenova",
     html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto">
-            <h2 style="color: #6bbefa">Booking Confirmed!</h2>
+           <h2 style="color: #ff6b6b">Booking Cancelled</h2>
             <p>Dear ${formattedUsername || "Guest"},</p>
             <p>
-              Thank you for booking with <b>Serenova</b>. Your reservation is
-              confirmed. Here are your booking details:
+              We’re writing to confirm that your booking with <b>Serenova</b> has been
+              <strong>cancelled</strong>. Below are the details of your cancelled
+              reservation:
             </p>
             <table style="width: 100%; border-collapse: collapse">
               <tr>
@@ -681,7 +682,7 @@ export const bookingConfirmation = async ({
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd">Check-in</td>
                 <td style="padding: 8px; border: 1px solid #ddd">${
-                  bookingDetails?.checkInDate.toLocaleDateString("en-US", {
+                  bookingDetails?.checkIn.toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "2-digit",
@@ -691,7 +692,7 @@ export const bookingConfirmation = async ({
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd">Check-out</td>
                 <td style="padding: 8px; border: 1px solid #ddd">${
-                  bookingDetails?.checkOutDate.toLocaleDateString("en-US", {
+                  bookingDetails?.checkOut.toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "2-digit",
@@ -711,7 +712,14 @@ export const bookingConfirmation = async ({
                 }${bookingDetails?.totalPrice || "Not Provided"}</td>
               </tr>
             </table>
-            <p style="margin-top: 20px">We look forward to hosting you!</p>
+            <p style="margin-top: 20px">
+              We're sorry to see you go, but we hope to welcome you to Serenova in the
+              future.
+            </p>
+            <p>
+              If this cancellation was made in error, please reach out to our support
+              team immediately.
+            </p>
             <p>
               Best regards,<br />
               The Serenova Team
@@ -731,4 +739,528 @@ export const bookingConfirmation = async ({
   });
 };
 
-export default bookingConfirmation;
+export const newBookingConfirmation = async ({
+  email,
+  username,
+  bookingDetails,
+}) => {
+  if (!email) {
+    throw new Error("No email provided");
+  }
+  if (!username) {
+    throw new Error("NO username provided");
+  }
+  const formattedUsername =
+    username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
+  const mailOptions = {
+    from: `"Team Serenova" <${process.env.EMAIL}>`,
+    to: email,
+    subject: "Booking Confirmation - Serenova",
+    html: `
+          <div style="margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+      font-family: sans-serif;">
+          <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      bgcolor="#f7f7f7"
+    >
+      <tr>
+        <td
+          align="center"
+          style="
+            padding-left: 20px;
+            padding-right: 20px;
+            font-family: sans-serif;
+          "
+        >
+          <table
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            bgcolor="#ffffff"
+            style="margin: 20px auto; border-radius: 10px; overflow: hidden"
+          >
+            <!-- Header -->
+            <tr>
+              <td style="padding: 20px; font-family: sans-serif">
+                <table width="100%" cellpadding="0" cellspacing="10">
+                  <tr>
+                    <td width="30" valign="middle">
+                      <img
+                        src="https://res.cloudinary.com/dsotpoln9/image/upload/v1750193918/logo_kc1mjf_lxdghi.png"
+                        alt="Logo"
+                        width="30"
+                        style="display: block; padding-left: 20px"
+                      />
+                    </td>
+                    <td valign="middle">
+                      <p
+                        style="
+                          font-size: 22px;
+                          color: #494549;
+                          font-weight: 600;
+                          margin: 0;
+                          font-family: sans-serif;
+                        "
+                      >
+                        Serenova
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="2"
+                      style="padding: 20px; font-family: sans-serif"
+                    >
+                      <h3
+                        style="
+                          font-size: 28px;
+                          font-weight: bold;
+                          color: #ff5a5f;
+                          margin: 0;
+                          font-family: sans-serif;
+                        "
+                      >
+                        Your reservation is confirmed
+                      </h3>
+                      <p
+                        style="
+                          color: #494549;
+                          font-weight: 500;
+                          margin-top: 8px;
+                          font-family: sans-serif;
+                        "
+                      >
+                        See you at ${
+                          bookingDetails?.city || "City not provided"
+                        }
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Intro Text -->
+            <tr>
+              <td style="padding: 0 30px 20px 30px; font-family: sans-serif">
+                <p
+                  style="
+                    font-size: 17px;
+                    line-height: 1.5;
+                    color: #494549;
+                    font-weight: 500;
+                    margin: 0;
+                    font-family: sans-serif;
+                    padding-left: 20px;
+                  "
+                >
+                  Dear ${formattedUsername || "Guest"},<br />
+                  Thank you for booking with <strong>Serenova</strong>. Your
+                  reservation is confirmed.<br />
+                  Here are your booking details:
+                </p>
+              </td>
+            </tr>
+
+            <!-- Room Image -->
+            <tr>
+              <td style="padding: 0 20px 20px 20px">
+                <img
+                  src=${bookingDetails?.image}
+                  alt="Room Image"
+                  width="90%"
+                  style="border-radius: 6px; display: block; margin: 10px auto"
+                />
+              </td>
+            </tr>
+
+            <!-- Room Details -->
+            <tr>
+              <td style="padding: 10px 40px; font-family: sans-serif">
+                <p
+                  style="
+                    font-weight: 500;
+                    font-size: 22px;
+                    color: #494549;
+                    margin: 0;
+                    font-family: sans-serif;
+                  "
+                >
+                  ${bookingDetails?.hotelName || "Not Provided"}
+                </p>
+                <p
+                  style="
+                    color: #494549;
+                    margin-top: 5px;
+                    font-family: sans-serif;
+                    font-size: 16px;
+                  "
+                >
+                  ${bookingDetails?.roomType || "Not Provided"}
+                </p>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td>
+                <hr
+                  style="
+                    width: 90%;
+                    border: none;
+                    border-top: 1px solid #d7d7d7;
+                    margin: 0 20px;
+                  "
+                />
+              </td>
+            </tr>
+
+            <!-- Check-in / Check-out -->
+            <tr>
+              <td style="padding: 0 20px 20px 20px; font-family: sans-serif">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td
+                      valign="top"
+                      style="
+                        width: 50%;
+                        padding-right: 30px;
+                        font-family: sans-serif;
+                      "
+                    >
+                      <p
+                        style="
+                          font-weight: 500;
+                          font-size: 18px;
+                          color: #494549;
+                          margin-top: 10;
+                          padding-left: 20px;
+                          font-family: sans-serif;
+                        "
+                      >
+                        ${
+                          bookingDetails?.checkInDate.toLocaleDateString(
+                            "en-US",
+                            {
+                              weekday: "long",
+                            }
+                          ) || "Not Provided"
+                        },<br />
+                        ${
+                          bookingDetails?.checkInDate.toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "2-digit",
+                            }
+                          ) || "Not Provided"
+                        }<br />
+                        <span style="font-size: 14px; font-family: sans-serif; font-size: 16px;"
+                          >Check in Anytime after 10AM</span
+                        >
+                      </p>
+                    </td>
+                    <td
+                      valign="top"
+                      style="
+                        width: 50%;
+                        padding-left: 10px;
+                        text-align: right;
+                        font-family: sans-serif;
+                      "
+                    >
+                      <p
+                        style="
+                          font-weight: 500;
+                          font-size: 18px;
+                          color: #494549;
+                          margin-top: 10;
+                          padding-right: 20px;
+                          font-family: sans-serif;
+                        "
+                      >
+                        ${
+                          bookingDetails?.checkOutDate.toLocaleDateString(
+                            "en-US",
+                            {
+                              weekday: "long",
+                            }
+                          ) || "Not Provided"
+                        },<br />
+                       ${
+                         bookingDetails?.checkOutDate.toLocaleDateString(
+                           "en-US",
+                           {
+                             year: "numeric",
+                             month: "long",
+                             day: "2-digit",
+                           }
+                         ) || "Not Provided"
+                       }<br />
+                        <span style="font-size: 14px; font-family: sans-serif; font-size: 16px;"
+                          >Check out 11AM</span
+                        >
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td>
+                <hr
+                  style="
+                    width: 90%;
+                    border: none;
+                    border-top: 1px solid #d7d7d7;
+                    margin: 0 20px;
+                  "
+                />
+              </td>
+            </tr>
+
+            <!-- Address -->
+            <tr>
+              <td style="padding: 10px 20px; font-family: sans-serif">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td
+                      style="
+                        font-size: 18px;
+                        color: #494549;
+                        font-weight: 500;
+                        padding-left: 20px;
+                        font-family: sans-serif;
+                        margin-top: 20px;
+                        display: block;
+                      "
+                    >
+                      Address
+                    </td>
+                    <td align="right">
+                      <a
+                        href="#"
+                        style="
+                          color: #ff5a5f;
+                          font-size: 18px;
+                          text-decoration: none;
+                          font-weight: 500;
+                          padding-right: 20px;
+                          font-family: sans-serif;
+                          margin-top: 20px;
+                          display: block;
+                        "
+                        >Get Directions</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <p
+                  style="
+                    margin-top: 8px;
+                    color: #494549;
+                    padding-left: 20px;
+                    font-family: sans-serif;
+                    font-size: 16px;
+                  "
+                >
+                  ${
+                    bookingDetails?.address || "Address not provided"
+                  }<br />India
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <hr
+                  style="
+                    width: 90%;
+                    border: none;
+                    border-top: 1px solid #d7d7d7;
+                    margin: 0 20px;
+                  "
+                />
+              </td>
+            </tr>
+
+            <!-- Guests -->
+            <tr>
+              <td style="padding: 10px 20px; font-family: sans-serif">
+                <p
+                  style="
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: #494549;
+                    padding-left: 20px;
+                    font-family: sans-serif;
+                    font-size: 18px;
+                    margin-top: 20px;
+                  "
+                >
+                  Guests
+                </p>
+                <p
+                  style="
+                    color: #494549;
+                    margin-top: 5px;
+                    padding-left: 20px;
+                    font-family: sans-serif;
+                    font-size: 16px;
+                  "
+                >
+                  ${bookingDetails?.guests || "Not Provided"}
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <hr
+                  style="
+                    width: 90%;
+                    border: none;
+                    border-top: 1px solid #d7d7d7;
+                    margin: 0 20px;
+                  "
+                />
+              </td>
+            </tr>
+
+            <!-- Amount -->
+            <tr>
+              <td style="padding: 10px 20px; font-family: sans-serif">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="font-family: sans-serif">
+                      <p
+                        style="
+                          font-size: 18px;
+                          font-weight: 500;
+                          color: #494549;
+                          padding-left: 20px;
+                          font-family: sans-serif;
+                          font-size: 18px;
+                          margin-top: 20px;
+                        "
+                      >
+                        Amount
+                      </p>
+                    </td>
+                    <td align="right">
+                      <a
+                        href="#"
+                        style="
+                          color: #ff5a5f;
+                          text-decoration: none;
+                          font-weight: 500;
+                          padding-right: 20px;
+                          font-family: sans-serif;
+                          margin-top: 20px;
+                          display: block;
+                          font-size: 18px;
+                        "
+                        >View Receipt</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <p
+                  style="
+                    color: #494549;
+                    margin-top: 8px;
+                    padding-left: 20px;
+                    font-family: sans-serif;
+                    font-size: 16px;
+                  "
+                >
+                  ${process.env.CURRENCY || "$"}${
+      bookingDetails?.totalPrice || "Not Provided"
+    }
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <hr
+                  style="
+                    width: 90%;
+                    border: none;
+                    border-top: 1px solid #d7d7d7;
+                    margin: 0 20px;
+                  "
+                />
+              </td>
+            </tr>
+
+            <!-- Change Reservation Button -->
+            <tr>
+              <td align="center" style="padding: 20px; font-family: sans-serif">
+                <a
+                  href="#"
+                  style="
+                    background-color: #ff5a5f;
+                    color: white;
+                    text-align: center;
+                    padding: 14px 24px;
+                    border-radius: 6px;
+                    text-decoration: none;
+                    font-weight: 500;
+                    display: inline-block;
+                    width: 85%;
+                    font-size: 18px;
+                    font-family: sans-serif;
+                  "
+                  >Change Your Reservation</a
+                >
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="
+                  padding: 30px 20px;
+                  font-size: 18px;
+                  color: #555;
+                  text-align: center;
+                  line-height: 1.6;
+                  margin-top: 0;
+                  font-family: sans-serif;
+                "
+              >
+                We look forward to hosting you!<br /><br />
+                Best regards,<br />
+                <strong style="font-family: sans-serif"
+                  >The Serenova Team</strong
+                >
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+          </div>`,
+  };
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Error sending booking confirmation email:", err);
+        reject(err);
+      } else {
+        console.log("Booking confirmation email sent:", info.response);
+        resolve(info);
+      }
+    });
+  });
+};

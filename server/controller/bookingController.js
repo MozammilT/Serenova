@@ -1,7 +1,10 @@
 import Booking from "../models/bookings.js";
 import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
-import { bookingConfirmation } from "./emailController.js";
+import {
+  cancelConfirmation,
+  newBookingConfirmation,
+} from "./emailController.js";
 import mongoose from "mongoose";
 
 //Function to Check the Availability of room (with Database)
@@ -92,6 +95,20 @@ export const createBooking = async (req, res) => {
         .json({ success: false, message: "Room not found" });
     }
     const pricePerNight = roomData.pricePerNight;
+    const getAddressTillCity = (fullAddress) => {
+      // Split by comma
+      const parts = fullAddress.split(",");
+
+      // If the last part includes "India", drop it
+      if (parts[parts.length - 1].trim().toLowerCase() === "india") {
+        parts.pop(); // remove "India"
+      }
+
+      // Rejoin the rest
+      return parts.join(",").trim();
+    };
+
+    const trimmedAddress = getAddressTillCity(roomData.hotel.address);
 
     //Calculate the total price the booking (pricePerNight * No. of Days of stay)
     const checkIn = new Date(checkInDate);
@@ -121,12 +138,14 @@ export const createBooking = async (req, res) => {
 
     // Send booking confirmation email
     try {
-      await bookingConfirmation({
+      await newBookingConfirmation({
         email: req.user.email,
         username: req.user.username,
         bookingDetails: {
           hotelName: roomData.hotel.name,
           roomType: roomData.roomType,
+          address: trimmedAddress,
+          image: roomData.images[0],
           checkInDate: new Date(checkInDate),
           checkOutDate: new Date(checkOutDate),
           guests,
@@ -244,17 +263,49 @@ export const deleteBooking = async (req, res) => {
       { $set: { status: "Cancelled" } }
     );
 
-    // Check if the update was successful
+    // Check if the update was unsuccessful
     if (result.modifiedCount === 0) {
       return res
         .status(400)
         .json({ success: false, message: "Failed to cancel the booking" });
     }
 
+    //Fetch the updated booking
+    const updatedBooking = await Booking.findById(bookingId).populate(
+      "room hotel"
+    );
+
+    const checkInDate = updatedBooking.checkInDate;
+    const checkOutDate = updatedBooking.checkOutDate;
+    const guests = updatedBooking.guests;
+    const totalPrice = updatedBooking.totalPrice;
+
     console.log("[deleteBooking] Cancelled booking: ", bookingId);
     res
       .status(200)
       .json({ success: true, message: "Booking cancelled successfully" });
+
+    //Sending cancellation email
+    try {
+      await cancelConfirmation({
+        email: req.user.email,
+        username: req.user.username,
+        bookingDetails: {
+          hotelName: updatedBooking.hotel.name,
+          roomType: updatedBooking.room.roomType,
+          checkIn: new Date(checkInDate),
+          checkOut: new Date(checkOutDate),
+          guests,
+          totalPrice,
+        },
+      });
+      console.log("Cancellation email sent to: ", req.user.email);
+    } catch (emailErr) {
+      console.error(
+        "[deleteBooking] Failed to send cancellation email:",
+        emailErr
+      );
+    }
   } catch (err) {
     console.error("Error in deleteBooking function: ", err);
     res
