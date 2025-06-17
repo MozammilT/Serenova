@@ -61,7 +61,7 @@ function MyBookings() {
         align="left"
       />
 
-      <div className="max-w-6xl mt-8 ">
+      <div className="max-w-7xl mt-8 ">
         <div className="hidden md:grid md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 font-medium text-base py-3">
           <div className="w-1/3">Hotels</div>
           <div className="w-1/3">Date & Timings</div>
@@ -80,7 +80,7 @@ function MyBookings() {
           bookings.map((booking) => (
             <div
               key={booking._id}
-              className="grid grid-col-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t"
+              className="grid grid-col-1 md:grid-cols-[3fr_2fr_1fr] gap-x-2.5 w-full border-b border-gray-300 py-6 first:border-t"
             >
               {/* Hotel Details */}
               <div className="flex flex-col md:flex-row">
