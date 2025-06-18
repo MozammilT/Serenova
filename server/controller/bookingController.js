@@ -1,10 +1,7 @@
 import Booking from "../models/bookings.js";
 import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
-import {
-  cancelConfirmation,
-  newBookingConfirmation,
-} from "./emailController.js";
+import { cancelConfirmation, bookingConfirmation } from "./emailController.js";
 import mongoose from "mongoose";
 
 //Function to Check the Availability of room (with Database)
@@ -138,7 +135,7 @@ export const createBooking = async (req, res) => {
 
     // Send booking confirmation email
     try {
-      await newBookingConfirmation({
+      await bookingConfirmation({
         email: req.user.email,
         username: req.user.username,
         bookingDetails: {
@@ -146,6 +143,7 @@ export const createBooking = async (req, res) => {
           roomType: roomData.roomType,
           address: trimmedAddress,
           image: roomData.images[0],
+          city: roomData.hotel.city,
           checkInDate: new Date(checkInDate),
           checkOutDate: new Date(checkOutDate),
           guests,
