@@ -739,7 +739,7 @@ export const cancelConfirmation = async ({
   });
 };
 
-export const newBookingConfirmation = async ({
+export const bookingConfirmation = async ({
   email,
   username,
   bookingDetails,
