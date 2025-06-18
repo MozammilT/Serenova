@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "https://serenova-backend.vercel.app"], // Add your frontend URL
+    origin: ["http://localhost:5173", "http://localhost:3000", "https://serenova-gamma.vercel.app"], // Add your frontend URL
     credentials: true,
   })
 );
