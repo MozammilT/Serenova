@@ -14,21 +14,14 @@ const clerkWebhook = async (req, res) => {
 
     const { data, type } = req.body;
 
-    const userData = {
-      _id: data.id,
-      email: data.email_addresses[0].email_address,
-      username: data.username,
-      image: data.image_url,
-    };
-
     switch (type) {
-      // case "user.created": {
-      //   await User.create(userData);
-      //   console.log("✅ User created:", userData);
-      //   break;
-      // }
-
       case "user.created": {
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses[0].email_address,
+          username: data.username,
+          image: data.image_url,
+        };
         try {
           const existingUser = await User.findById(userData.username);
           if (existingUser) {
@@ -49,12 +42,25 @@ const clerkWebhook = async (req, res) => {
       }
 
       case "user.updated": {
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses[0].email_address,
+          username: data.username,
+          image: data.image_url,
+        };
         await User.findByIdAndUpdate(userData._id, userData);
         console.log("✅ User updated:", userData);
         break;
       }
       case "user.deleted": {
-        await User.findByIdAndDelete(data._id);
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses?.[0]?.email_address || "N/A",
+          username: data.username || "N/A",
+          image: data.image_url || "N/A",
+        };
+
+        await User.findByIdAndDelete(userData._id);
         console.log("✅ User deleted:", userData);
         break;
       }
