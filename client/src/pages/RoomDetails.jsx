@@ -65,6 +65,7 @@ function RoomDetails() {
     try {
       e.preventDefault();
       setLoading(true);
+
       if (!isavailable) {
         return checkAvailability();
       } else {
@@ -88,7 +89,14 @@ function RoomDetails() {
         }
       }
     } catch (err) {
-      toast.error(err.message);
+      toast.error("Login to book a room", {
+        position: "bottom-right",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     } finally {
       setLoading(false);
     }
