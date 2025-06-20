@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Star from "../components/StarRating";
 import Title from "../components/Title";
-import { roomsDummyData } from "../constants/assets";
 import { facilityIcons } from "../constants/assets";
 import { useAppContext } from "../context/AppContext.jsx";
 
@@ -37,7 +36,6 @@ function AllRooms() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { rooms, currency, navigate } = useAppContext();
   const [openFilter, setOpenFilter] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
     roomType: [],
     priceRange: [],
@@ -176,14 +174,6 @@ function AllRooms() {
     setSearchParams({});
   }
 
-  useEffect(() => {
-    if (filteredRooms.length === 0) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [filteredRooms]);
-
   return (
     <div className="flex flex-col-reverse lg:flex-row items-start justify-between pt-28 md:pt-35 px-4 md:px-16 lg:px-24 xl:px-32">
       <div>
@@ -192,11 +182,11 @@ function AllRooms() {
           subtitle="Take advantage of our limited-time offers and special packages to enhance your stay and create unforgettable memories."
           align="left"
         />
-        {loading ? (
+        {rooms.length === 0 ? (
           Array(4)
             .fill(0)
             .map((_, index) => <SkeletonCard key={index} />)
-        ) : filteredRooms.length === 0 && !loading ? (
+        ) : filteredRooms.length === 0 ? (
           <div className="flex items-center justify-center min-h-[300px] text-center text-base font-medium text-gray-800">
             NO ROOMS MATCHED YOUR FILTERS
           </div>
@@ -212,7 +202,7 @@ function AllRooms() {
                     navigate(`/rooms/${room._id}`);
                     scrollTo(0, 0);
                   }}
-                  src={room.images[0]}
+                  src={room.images[1]}
                   alt="room-image"
                   title="View Room Details"
                   className="max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer"
