@@ -192,70 +192,76 @@ function AllRooms() {
           subtitle="Take advantage of our limited-time offers and special packages to enhance your stay and create unforgettable memories."
           align="left"
         />
-        {loading
-          ? Array(4)
-              .fill(0)
-              .map((_, index) => <SkeletonCard key={index} />)
-          : filteredRooms.map((room) => {
-              return (
-                <div
-                  key={room._id}
-                  className="flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 last:pb-30 last:border-0"
-                >
-                  <img
+        {loading ? (
+          Array(4)
+            .fill(0)
+            .map((_, index) => <SkeletonCard key={index} />)
+        ) : filteredRooms.length === 0 && !loading ? (
+          <div className="flex items-center justify-center min-h-[300px] text-center text-base font-medium text-gray-800">
+            NO ROOMS MATCHED YOUR FILTERS
+          </div>
+        ) : (
+          filteredRooms.map((room) => {
+            return (
+              <div
+                key={room._id}
+                className="flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 last:pb-30 last:border-0"
+              >
+                <img
+                  onClick={() => {
+                    navigate(`/rooms/${room._id}`);
+                    scrollTo(0, 0);
+                  }}
+                  src={room.images[0]}
+                  alt="room-image"
+                  title="View Room Details"
+                  className="max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer"
+                />
+                <div className="md:w-1/2 flex flex-col gap-2">
+                  <p className="text-gray-500">{room.hotel.city}</p>
+                  <p
+                    className="text-gray-800 text-3xl font-playfair cursor-pointer"
                     onClick={() => {
                       navigate(`/rooms/${room._id}`);
                       scrollTo(0, 0);
                     }}
-                    src={room.images[0]}
-                    alt="room-image"
-                    title="View Room Details"
-                    className="max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer"
-                  />
-                  <div className="md:w-1/2 flex flex-col gap-2">
-                    <p className="text-gray-500">{room.hotel.city}</p>
-                    <p
-                      className="text-gray-800 text-3xl font-playfair cursor-pointer"
-                      onClick={() => {
-                        navigate(`/rooms/${room._id}`);
-                        scrollTo(0, 0);
-                      }}
-                    >
-                      {room.hotel.name}
-                      <span className="font-inner text-base ml-2">{`(${room.roomType})`}</span>
+                  >
+                    {room.hotel.name}
+                    <span className="font-inner text-base ml-2">{`(${room.roomType})`}</span>
+                  </p>
+                  <div className="flex items-center">
+                    <Star rating={room.hotel.rating} />
+                    <p className="ml-2">200+ Review</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-gray-500 mt-2 text-sm">
+                    <img src="/locationIcon.svg" />
+                    <span>{room.hotel.address}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center mt-3 mb-6 gap-4">
+                    {room.amenities.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                      >
+                        <img
+                          src={facilityIcons[item]}
+                          alt={item}
+                          className="w-5 h-5"
+                        />
+                        <p className="text-xs">{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-xl font-medium text-gray-700">
+                      ${room.pricePerNight}/night
                     </p>
-                    <div className="flex items-center">
-                      <Star rating={room.hotel.rating} />
-                      <p className="ml-2">200+ Review</p>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-500 mt-2 text-sm">
-                      <img src="/locationIcon.svg" />
-                      <span>{room.hotel.address}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center mt-3 mb-6 gap-4">
-                      {room.amenities.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg"
-                        >
-                          <img
-                            src={facilityIcons[item]}
-                            alt={item}
-                            className="w-5 h-5"
-                          />
-                          <p className="text-xs">{item}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <p className="text-xl font-medium text-gray-700">
-                        ${room.pricePerNight}/night
-                      </p>
-                    </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Filters */}

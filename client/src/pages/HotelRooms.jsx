@@ -216,7 +216,7 @@ function HotelRooms() {
           Array(4)
             .fill(0)
             .map((_, index) => <SkeletonCard key={index} />)
-        ) : filteredRooms.length === 0 && !loading ? (
+        ) : filteredRooms.length === 0 ? (
           <div className="flex items-center justify-center min-h-[300px] text-center text-base font-medium text-gray-800">
             NO ROOMS MATCHED YOUR FILTERS
           </div>
