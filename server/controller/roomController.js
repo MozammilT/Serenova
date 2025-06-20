@@ -37,7 +37,7 @@ export const createRoom = async (req, res) => {
 // API to get all Room
 export const getRooms = async (req, res) => {
   try {
-    const rooms = await Room.find({ isAvailable: true })
+    const rooms = await Room.find()
       .populate({
         path: "hotel",
         populate: {
