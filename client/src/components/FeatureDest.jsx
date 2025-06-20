@@ -66,7 +66,7 @@ function Featuredest() {
                 <Hotelcard key={hotel._id} room={hotel} index={index} />
               ))}
       </div>
-      {loading && (
+      {!loading && (
         <button
           onClick={() => {
             navigate("/hotels");
