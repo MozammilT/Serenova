@@ -8,19 +8,65 @@ import { useAppContext } from "../context/AppContext.jsx";
 
 function Featuredest() {
   const { hotels, navigate } = useAppContext();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (hotels && hotels.length > 0) {
+      setLoading(false);
+    }
+  }, [hotels]);
+
+  const SkeletonCard = () => (
+    <div>
+      <div class="relative w-[315px] rounded-xl overflow-hidden bg-grey-100 text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.05)] animate-pulse">
+        <div class="w-full h-45 bg-gray-200"></div>
+
+        <p class="px-3 py-1 absolute top-3 left-3 text-xs bg-gray-200"></p>
+
+        <div class="p-4 pt-5">
+          <div class="flex items-center justify-between">
+            <p class="h-6 bg-gray-200 rounded w-1/2"></p>
+            <div class="flex items-center gap-1">
+              <div class="h-4 w-4 bg-gray-200 rounded"></div>
+              <div class="h-4 w-4 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1 text-sm mt-1.5">
+            <div class="h-4 w-4 bg-gray-200 rounded"></div>
+            <div class="h-4 w-10 bg-gray-200 rounded"></div>
+          </div>
+
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex justify-start gap-1 items-center">
+              <div class="h-4 w-24 bg-gray-200 rounded"></div>
+              <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+            </div>
+            <div class="h-10 w-24 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    hotels.length > 0 && (
-      <div className="flex flex-col items-center px-6 md:px-16 lg:px-20 pt-20">
-        <Title
-          title="Featured Destinations"
-          subtitle="Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences."
-        />
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-20">
-          {hotels.slice(0, 4).map((hotel, index) => (
-            <Hotelcard key={hotel._id} room={hotel} index={index} />
-          ))}
-        </div>
+    <div className="flex flex-col items-center px-6 md:px-16 lg:px-20 pt-20">
+      <Title
+        title="Featured Destinations"
+        subtitle="Discover our handpicked selection of exceptional properties around the world, offering unparalleled luxury and unforgettable experiences."
+      />
+      <div className="flex flex-wrap items-center justify-center gap-6 mt-20">
+        {loading
+          ? Array(4)
+              .fill(0)
+              .map((_, index) => <SkeletonCard key={index} />)
+          : hotels
+              .slice(0, 4)
+              .map((hotel, index) => (
+                <Hotelcard key={hotel._id} room={hotel} index={index} />
+              ))}
+      </div>
+      {loading && (
         <button
           onClick={() => {
             navigate("/hotels");
@@ -30,8 +76,8 @@ function Featuredest() {
         >
           View All Destinations
         </button>
-      </div>
-    )
+      )}
+    </div>
   );
 }
 
