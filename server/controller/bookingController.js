@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 //Function to Check the Availability of room (with Database)
 const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
   try {
+    console.log("[checkAvailability] Checking availability for Room ID:", room);
     const existingBookings = await Booking.find({
       room,
       status: { $ne: "Cancelled" },
@@ -17,8 +18,23 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
         },
       ],
     }).exec();
-    const isAvailable = existingBookings.length === 0;
-    return isAvailable;
+    const isBookingAvailable = existingBookings.length === 0;
+    console.log("[checkAvailability] isBookingAvailable:", isBookingAvailable);
+
+    const roomData = await Room.findById(room);
+    if (!roomData) {
+      console.warn("[checkAvailability] Room not found for ID:", room);
+      return false;
+    }
+    const roomAvailable =
+      roomData.isAvailable === "true" || roomData.isAvailable === true;
+    console.log(
+      "[checkAvailability] Room isAvailable field:",
+      roomData.isAvailable
+    );
+    console.log("[checkAvailability] roomAvailable:", roomAvailable);
+
+    return isBookingAvailable && roomAvailable;
   } catch (err) {
     console.error("Error in checkAvailability function: ", err);
     throw err;
