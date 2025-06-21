@@ -18,31 +18,31 @@ function Featuredest() {
 
   const SkeletonCard = () => (
     <div>
-      <div class="relative w-[315px] rounded-xl overflow-hidden bg-grey-100 text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.05)] animate-pulse">
-        <div class="w-full h-45 bg-gray-200"></div>
+      <div className="relative w-[315px] rounded-xl overflow-hidden bg-grey-100 text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.05)] animate-pulse">
+        <div className="w-full h-45 bg-gray-200"></div>
 
-        <p class="px-3 py-1 absolute top-3 left-3 text-xs bg-gray-200"></p>
+        <p className="px-3 py-1 absolute top-3 left-3 text-xs bg-gray-200"></p>
 
-        <div class="p-4 pt-5">
-          <div class="flex items-center justify-between">
-            <p class="h-6 bg-gray-200 rounded w-1/2"></p>
-            <div class="flex items-center gap-1">
-              <div class="h-4 w-4 bg-gray-200 rounded"></div>
-              <div class="h-4 w-4 bg-gray-200 rounded"></div>
+        <div className="p-4 pt-5">
+          <div className="flex items-center justify-between">
+            <p className="h-6 bg-gray-200 rounded w-1/2"></p>
+            <div className="flex items-center gap-1">
+              <div className="h-4 w-4 bg-gray-200 rounded"></div>
+              <div className="h-4 w-4 bg-gray-200 rounded"></div>
             </div>
           </div>
 
-          <div class="flex items-center gap-1 text-sm mt-1.5">
-            <div class="h-4 w-4 bg-gray-200 rounded"></div>
-            <div class="h-4 w-10 bg-gray-200 rounded"></div>
+          <div className="flex items-center gap-1 text-sm mt-1.5">
+            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+            <div className="h-4 w-10 bg-gray-200 rounded"></div>
           </div>
 
-          <div class="flex items-center justify-between mt-2">
-            <div class="flex justify-start gap-1 items-center">
-              <div class="h-4 w-24 bg-gray-200 rounded"></div>
-              <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex justify-start gap-1 items-center">
+              <div className="h-4 w-24 bg-gray-200 rounded"></div>
+              <div className="h-6 w-1/4 bg-gray-200 rounded"></div>
             </div>
-            <div class="h-10 w-24 bg-gray-200 rounded"></div>
+            <div className="h-10 w-24 bg-gray-200 rounded"></div>
           </div>
         </div>
       </div>
