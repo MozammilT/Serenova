@@ -1,9 +1,4 @@
-<table style="border: none;">
-  <tr>
-    <td style="border: none;"><img src="https://res.cloudinary.com/dsotpoln9/image/upload/v1750193918/logo_kc1mjf_lxdghi.png" alt="Serenova Logo" width="40"/></td>
-    <td style="vertical-align: middle; padding-left: 10px; border: none;"><h1 style="margin: 0;">Serenova</h1></td>
-  </tr>
-</table>
+  <h1 style="font-size: 2rem; font-weight: bold;">Serenova</h1>
 
 Serenova is a modern, full-featured hotel booking platform built with the latest web technologies. From real-time Stripe payments to elegant email confirmations, this project showcases a complete hotel reservation experience — fast, secure, and beautifully responsive.
 
