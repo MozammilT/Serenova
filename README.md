@@ -1,7 +1,7 @@
-<table>
+<table style="border: none;">
   <tr>
-    <td><img src="https://res.cloudinary.com/dsotpoln9/image/upload/v1750193918/logo_kc1mjf_lxdghi.png" alt="Serenova Logo" width="40"/></td>
-    <td style="vertical-align: middle; padding-left: 10px;"><h1>Serenova</h1></td>
+    <td style="border: none;"><img src="https://res.cloudinary.com/dsotpoln9/image/upload/v1750193918/logo_kc1mjf_lxdghi.png" alt="Serenova Logo" width="40"/></td>
+    <td style="vertical-align: middle; padding-left: 10px; border: none;"><h1 style="margin: 0;">Serenova</h1></td>
   </tr>
 </table>
 
