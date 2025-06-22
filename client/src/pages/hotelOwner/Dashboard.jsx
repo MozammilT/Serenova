@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Title from "../../components/Title";
-import { userBookingsDummyData } from "../../constants/assets";
 import { useAppContext } from "../../context/AppContext.jsx";
 import { toast } from "react-hot-toast";
 
@@ -9,6 +8,7 @@ function DashBoard() {
     Bookings: [],
     totalBookings: 0,
     totalRevenue: 0,
+    userDetail: [],
   });
   const { currency, axios, user, getToken } = useAppContext();
 
@@ -105,26 +105,26 @@ function DashBoard() {
             </tr>
           </thead>
           <tbody className="text-sm">
-            {userBookingsDummyData.map((item, index) => (
+            {dashboardData.userDetail.map((item, index) => (
               <tr kry={index}>
                 <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
-                  {item.user.username}
+                  {item.username}
                 </td>
                 <td className="py-3 px-4 text-gray-700 border-t border-gray-300 max-sm:hidden">
-                  {item.room.roomType}
+                  {item.roomType}
                 </td>
                 <td className="py-3 px-4 text-gray-700 border-t border-gray-300 text-center">
-                  {item.totalPrice}
+                  ${item.amount}
                 </td>
                 <td className="py-3 px-4 border-t border-gray-300 text-center">
                   <button
                     className={`py-1 px-3 text-sx rounded-full mx-auto ${
-                      item.isPaid
+                      item.paymentStatus
                         ? "bg-green-200 text-green-600"
                         : "bg-amber-200 text-yellow-600"
                     }`}
                   >
-                    {item.isPaid ? "Completed" : "Pending"}
+                    {item.paymentStatus ? "Completed" : "Pending"}
                   </button>
                 </td>
               </tr>

@@ -228,12 +228,22 @@ export const getHotelBooking = async (req, res) => {
     );
     console.log("[getHotelBooking] Total revenue:", totalRevenue);
 
+    //User details
+    const userDetail = bookings.map((data) => ({
+      username: data?.user?.username,
+      roomType: data?.room?.roomType,
+      amount: data?.totalPrice,
+      paymentStatus: data?.isPaid,
+    }));
+
+    console.log("User details :", userDetail);
+
     console.log(
       `[getHotelBooking] All bookings for hotel ${hotel} fetched successfully`
     );
     res.status(200).json({
       success: true,
-      dashBoardData: { totalBookings, totalRevenue, bookings },
+      dashBoardData: { totalBookings, totalRevenue, bookings, userDetail },
     });
   } catch (err) {
     console.error("Error in getHotelBooking function: ", err);
