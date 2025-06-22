@@ -6,8 +6,11 @@ import { useAppContext } from "../context/AppContext.jsx";
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingBookingId, setLoadingBookingId] = useState(null);
-  const { axios, getToken, user } = useAppContext();
+  const [buttonLoading, setButtonLoading] = useState({
+    id: null,
+    type: null,
+  });
+  const { axios, getToken, user, navigate } = useAppContext();
 
   const fetchBookings = async () => {
     try {
@@ -30,7 +33,7 @@ function MyBookings() {
 
   const deleteBooking = async (bookingId) => {
     try {
-      setLoadingBookingId(bookingId);
+      setButtonLoading({ id: bookingId, type: "delete" });
       const { data } = await axios.delete("/api/bookings/delete", {
         headers: { Authorization: `Bearer ${await getToken()}` },
         data: { bookingId },
@@ -43,7 +46,28 @@ function MyBookings() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoadingBookingId(null);
+      setButtonLoading({ id: null, type: null });
+    }
+  };
+
+  //Fuction for Stripe payments gateway
+  const handlePayment = async (bookingId) => {
+    try {
+      setButtonLoading({ id: bookingId, type: "payment" });
+      const { data } = await axios.post(
+        "/api/bookings/stripe-payment",
+        { bookingId },
+        { headers: { Authorization: `Bearer ${await getToken()}` } }
+      );
+      if (data.success) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setButtonLoading({ id: null, type: null });
     }
   };
 
@@ -157,30 +181,43 @@ function MyBookings() {
                 <div className="flex gap-2">
                   {!booking.isPaid && (
                     <button
+                      onClick={() => handlePayment(booking._id)}
                       className={`${
                         booking.status === "Cancelled"
                           ? "hidden"
-                          : "px-4 py-1.5 mt-4 text-sm border border-gray-400 rounded-full bg-gray-500 text-white hover:bg-gray-900 hover:text-white transition-all cursor-pointer"
+                          : "min-w-[87px] px-4 py-1.5 mt-4 text-sm border border-gray-400 rounded-full bg-gray-500 text-white hover:bg-gray-900 hover:text-white transition-all flex items-center justify-center"
+                      } ${
+                        buttonLoading.id === booking._id &&
+                        buttonLoading.type === "payment"
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
                       }`}
                     >
-                      Pay Now
+                      {buttonLoading.id === booking._id &&
+                      buttonLoading.type === "payment" ? (
+                        <span className="inline-block w-5 h-5 border-[3px] border-gray-400 border-t-transparent rounded-full animate-spin"></span>
+                      ) : (
+                        "Pay Now"
+                      )}
                     </button>
                   )}
                   {!booking.isPaid && (
                     <button
-                      disabled={loadingBookingId === booking._id}
+                      disabled={buttonLoading === booking._id}
                       onClick={() => deleteBooking(booking._id)}
                       className={`${
                         booking.status === "Cancelled"
                           ? "hidden"
                           : "w-[87px] px-4 py-1.5 mt-4 text-sm border border-gray-400 rounded-full hover:bg-gray-900 hover:text-white transition-all flex items-center justify-center"
                       } ${
-                        loadingBookingId === booking._id
+                        buttonLoading.id === booking._id &&
+                        buttonLoading.type === "delete"
                           ? "cursor-not-allowed"
                           : "cursor-pointer"
                       }`}
                     >
-                      {loadingBookingId === booking._id ? (
+                      {buttonLoading.id === booking._id &&
+                      buttonLoading.type === "delete" ? (
                         <span className="inline-block w-5 h-5 border-[3px] border-gray-400 border-t-transparent rounded-full animate-spin"></span>
                       ) : (
                         "Cancel"

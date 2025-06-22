@@ -3,6 +3,7 @@ import Room from "../models/room.js";
 import Hotel from "../models/hotel.js";
 import { cancelConfirmation, bookingConfirmation } from "./emailController.js";
 import mongoose from "mongoose";
+import Stripe from "stripe";
 
 //Function to Check the Availability of room (with Database)
 const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
@@ -325,5 +326,59 @@ export const deleteBooking = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Failed to cancel the booking" });
+  }
+};
+
+//API for payyment
+export const stripePayment = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+    const booking = await Booking.findById(bookingId);
+    const roomData = await Room.findById(booking.room).populate("hotel");
+    const totalPrice = booking.totalPrice;
+    const { origin } = req.headers;
+
+    const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const line_items = [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: roomData.hotel.name,
+          },
+          unit_amount: totalPrice * 100,
+        },
+        quantity: 1,
+      },
+    ];
+
+    //Access user's email
+    const userEmail = req.user?.emailAddresses?.[0]?.emailAddress;
+
+    //Creatte a Stripe customer
+    const customer = await stripeInstance.customers.create({
+      email: userEmail,
+      metadata: {
+        userId: req.user.id,
+      },
+    });
+
+    //Create Checkout session
+    const session = await stripeInstance.checkout.sessions.create({
+      line_items,
+      mode: "payment",
+      customer: customer.id,
+      success_url: `${origin}/my-bookings`,
+      cancel_url: `${origin}/my-bookings`,
+      metadata: {
+        bookingId,
+      },
+    });
+
+    res.status(200).json({ success: true, url: session.url });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Payment failure" });
+    console.log("Error in stripePayment function :", err);
   }
 };

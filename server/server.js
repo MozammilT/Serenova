@@ -10,19 +10,33 @@ import roomRouter from "./routes/roomRoutes.js";
 import bookingRoute from "./routes/bookingsRoute.js";
 import emailRoute from "./routes/emailRoute.js";
 import connectCloudinary from "./config/cloudinary.js";
+import { stripeWebhooks } from "./controller/stripe-webhook.js";
 
 connectDB();
 connectCloudinary();
 
 const PORT = process.env.PORT;
 const app = express();
-app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "https://serenova-gamma.vercel.app"], // Add your frontend URL
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://serenova-gamma.vercel.app",
+    ], // Add your frontend URL
     credentials: true,
   })
 );
+
+//API to listen for  Stripe Webhooks
+app.post(
+  "/api/stripe/",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
+
+app.use(express.json());
+
 app.use(clerkMiddleware());
 
 app.use("/api/webhooks", clerkWebhook);
