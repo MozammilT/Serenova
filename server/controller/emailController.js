@@ -133,7 +133,7 @@ export const sendWelcomeEmail = (req, res) => {
                   >from <strong style="font-size: 22px">$379</strong></span
                 >
                 <a
-                  href="#"
+                  href="https://serenova-gamma.vercel.app"
                   style="
                     float: right;
                     background: #111;
@@ -195,7 +195,7 @@ export const sendWelcomeEmail = (req, res) => {
                         <strong>$399/night</strong>
                       </p>
                       <a
-                        href="#"
+                        href="https://serenova-gamma.vercel.app"
                         style="
                           background: #111;
                           color: white;
@@ -245,7 +245,7 @@ export const sendWelcomeEmail = (req, res) => {
                         <strong>$439/night</strong>
                       </p>
                       <a
-                        href="#"
+                        href="https://serenova-gamma.vercel.app"
                         style="
                           background: #111;
                           color: white;
@@ -320,7 +320,7 @@ export const sendWelcomeEmail = (req, res) => {
                         <strong>$599/night</strong>
                       </p>
                       <a
-                        href="#"
+                        href="https://serenova-gamma.vercel.app"
                         style="
                           background: #111;
                           color: white;
@@ -380,7 +380,7 @@ export const sendWelcomeEmail = (req, res) => {
                   alike
                 </p>
                 <a
-                  href="#"
+                  href="https://serenova-gamma.vercel.app"
                   style="
                     background: white;
                     color: #1e293b;
@@ -418,19 +418,6 @@ export const sendWelcomeEmail = (req, res) => {
                       >
                         <strong>Open Sky Dining</strong>
                       </p>
-                      <a
-                        href="#"
-                        style="
-                          background: #111;
-                          color: white;
-                          padding: 6px 12px;
-                          text-decoration: none;
-                          font-size: 12px;
-                          border-radius: 4px;
-                          font-family: Verdana, Geneva, sans-serif;;
-                        "
-                        >Learn More</a
-                      >
                     </td>
                     <td width="33%" style="text-align: center">
                       <img
@@ -449,19 +436,6 @@ export const sendWelcomeEmail = (req, res) => {
                       >
                         <strong>Private Pool</strong>
                       </p>
-                      <a
-                        href="#"
-                        style="
-                          background: #111;
-                          color: white;
-                          padding: 6px 12px;
-                          text-decoration: none;
-                          font-size: 12px;
-                          border-radius: 4px;
-                          font-family: Verdana, Geneva, sans-serif;
-                        "
-                        >Learn More</a
-                      >
                     </td>
                     <td width="33%" style="text-align: center">
                       <img
@@ -480,19 +454,6 @@ export const sendWelcomeEmail = (req, res) => {
                       >
                         <strong>Private Bar</strong>
                       </p>
-                      <a
-                        href="#"
-                        style="
-                          background: #111;
-                          color: white;
-                          padding: 6px 12px;
-                          text-decoration: none;
-                          font-size: 12px;
-                          border-radius: 4px;
-                          font-family: Verdana, Geneva, sans-serif;;
-                        "
-                        >Learn More</a
-                      >
                     </td>
                   </tr>
                 </table>
@@ -881,6 +842,33 @@ export const bookingConfirmation = async ({
                   </td>
                 </tr>
 
+                <tr>
+                  <td align="center" style="padding: 30px; font-family: sans-serif">
+                    <a
+                      href="https://serenova-gamma.vercel.app/my-bookings"
+                      style="
+                      background-color: #ff5a5f;
+                      color: white;
+                      text-align: center;
+                      padding: 14px 24px;
+                      text-decoration: none;
+                      font-weight: 600;
+                      display: inline-block;
+                      width: 85%;
+                      font-size: 18px;
+                      font-family: sans-serif;
+                    "
+                    >View Full Itinerary</a>
+                  </td>
+                </tr>
+
+                <!-- Divider -->
+                <tr>
+                  <td>
+                    <hr style="width: 100%; border: none; border-top: 1px solid #d7d7d7; margin: 0;" />
+                  </td>
+                </tr>
+
                 <!-- Address -->
                 <tr>
                   <td style="padding: 10px 16px; font-family: sans-serif;">
@@ -948,7 +936,23 @@ export const bookingConfirmation = async ({
                 <!-- Change Reservation Button -->
                 <tr>
                   <td align="center" style="padding: 20px 0 20px 0; font-family: sans-serif;">
-                    <a href="#" style="background-color: #ff5a5f; color: white; text-align: center; padding: 14px 24px; border-radius: 6px; text-decoration: none; font-weight: 500; display: inline-block; width: 85%; font-size: 18px; font-family: sans-serif;">Change Your Reservation</a>
+                   <a
+                    href="#"
+                    style="
+                    background-color: #ffffff;
+                    color: #494549;
+                    text-align: center;
+                    padding: 14px 24px;
+                    border: 1px solid #d7d7d7;
+                    text-decoration: none;
+                    font-weight: 600;
+                    display: inline-block;
+                    width: 85%;
+                    font-size: 18px;
+                    font-family: sans-serif;
+                  "
+                  >Change Your Reservation</a
+                >
                   </td>
                 </tr>
 

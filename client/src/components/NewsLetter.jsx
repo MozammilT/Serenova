@@ -52,7 +52,7 @@ function NewsLetter() {
           <button
             onClick={submitHandler}
             disabled={loading || subscribed || !email}
-            className=" group flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded active:scale-95 transition-all cursor-pointer"
+            className="w-[210px] h-[48px] group flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded active:scale-95 transition-all cursor-pointer"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
