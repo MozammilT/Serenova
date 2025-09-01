@@ -43,7 +43,6 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
 };
 
 //API to check the Availability of a room (sending data to frontend)
-//? Route - post => /api/bookings/check-availability
 
 export const checkAvailabilityAPI = async (req, res) => {
   try {
@@ -72,7 +71,6 @@ export const checkAvailabilityAPI = async (req, res) => {
 };
 
 //API to create a new booking
-//? Route - post => /api/bookings/book
 
 export const createBooking = async (req, res) => {
   try {
@@ -110,7 +108,6 @@ export const createBooking = async (req, res) => {
     }
     const pricePerNight = roomData.pricePerNight;
     const getAddressTillCity = (fullAddress) => {
-      // Split by comma
       const parts = fullAddress.split(",");
 
       // If the last part includes "India", drop it
@@ -124,17 +121,11 @@ export const createBooking = async (req, res) => {
 
     const trimmedAddress = getAddressTillCity(roomData.hotel.address);
 
-    //Calculate the total price the booking (pricePerNight * No. of Days of stay)
     const checkIn = new Date(checkInDate);
-    console.log("checkIn: ", checkIn);
     const checkOut = new Date(checkOutDate);
-    console.log("checkOut: ", checkOut);
     const timeDiff = checkOut.getTime() - checkIn.getTime();
-    console.log("timeDiff: ", timeDiff);
     const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    console.log("nights: ", nights);
     const totalPrice = pricePerNight * nights;
-    console.log("Total Price: ", totalPrice);
 
     const booking = await Booking.create({
       user,
@@ -180,7 +171,6 @@ export const createBooking = async (req, res) => {
 };
 
 //API to get all bookings for a User
-//? Route - GET => /api/booking/user
 
 export const getUserBookings = async (req, res) => {
   try {
@@ -200,7 +190,6 @@ export const getUserBookings = async (req, res) => {
 };
 
 //API to get all bookings for a particular hotel
-//? Route - GET => /api/bookings/hotel
 
 export const getHotelBooking = async (req, res) => {
   try {
@@ -236,11 +225,6 @@ export const getHotelBooking = async (req, res) => {
       paymentStatus: data?.isPaid,
     }));
 
-    console.log("User details :", userDetail);
-
-    console.log(
-      `[getHotelBooking] All bookings for hotel ${hotel} fetched successfully`
-    );
     res.status(200).json({
       success: true,
       dashBoardData: { totalBookings, totalRevenue, bookings, userDetail },
@@ -254,7 +238,6 @@ export const getHotelBooking = async (req, res) => {
 };
 
 //API to delete a booking
-//? Route - delete => /api/bookings/delete
 
 export const deleteBooking = async (req, res) => {
   try {
@@ -305,7 +288,6 @@ export const deleteBooking = async (req, res) => {
     const guests = updatedBooking.guests;
     const totalPrice = updatedBooking.totalPrice;
 
-    console.log("[deleteBooking] Cancelled booking: ", bookingId);
     res
       .status(200)
       .json({ success: true, message: "Booking cancelled successfully" });
